@@ -33,9 +33,10 @@ const Yesterday = (props) => {
                         <Text style={{ textAlign: "center", fontSize: 9 }}>11-7-2021</Text>
                     </View>
                 </View>
-                <View style={{ flex: .5, paddingRight: wp(3), alignItems: "flex-end" }}>
+                <TouchableOpacity onPress={() => props.navigation.navigate('ProfileStack', { screen: 'Profile' })}
+                    style={{ flex: .5, paddingRight: wp(3), alignItems: "flex-end" }}>
                     <Image source={iconPath.BLACKLOGO} style={styles.imageStyle} />
-                </View>
+                </TouchableOpacity>
             </View>
 
             <View style={{ flexDirection: "row", marginHorizontal: wp(5), marginTop: wp(10) }}>

@@ -1,33 +1,22 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 import React from 'react'
-import { View, Text } from 'react-native'
 
 import ChatHead from '../../Screens/MainScreens/Community/ChatHead'
-
-const ChatTopBar2 = () => {
-    return (
-        <View>
-            <Text>sdss</Text>
-        </View>
-    )
-}
-const ChatTopBar1 = () => {
-    return (
-        <View>
-            <Text>sdsds</Text>
-        </View>
-    )
-}
-
+import { Colors } from '../../Constants/Colors';
 
 const Tab = createMaterialTopTabNavigator();
 
 const ChatTopBar = () => {
     return (
-        <Tab.Navigator>
+        <Tab.Navigator tabBarOptions={{
+            activeTintColor: Colors.Yellow,
+            inactiveTintColor: "#bbb",
+            labelStyle: { fontWeight: "bold" },
+            indicatorStyle: { backgroundColor: Colors.Yellow }
+        }}>
             <Tab.Screen name="ALL" component={ChatHead} />
-            <Tab.Screen name="POD" component={ChatTopBar1} />
+            <Tab.Screen name="POD" component={ChatHead} />
         </Tab.Navigator>
     );
 }

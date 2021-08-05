@@ -7,6 +7,7 @@ import { StatusBar } from 'react-native';
 
 import Splash from '../Screens/Splash'
 import AuthStack from './Stack/AuthStack';
+import ProfileStack from './Stack/ProfileStack';
 import BottomTab from './BottomNav/BottomTab';
 // import { connect } from 'react-redux'
 
@@ -28,6 +29,7 @@ function MainNav(props) {
                         {/* : */}
                         <Stack.Screen name="BottomTab" component={BottomTab} />
                         <Stack.Screen name="AuthStack" component={AuthStack} />
+                        <Stack.Screen name="ProfileStack" component={ProfileStack} />
                         {/* } */}
                     </Stack.Navigator>
                 </NavigationContainer>
