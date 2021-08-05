@@ -1,21 +1,39 @@
-import React from 'react'
-import { View, Text, StyleSheet, Image } from 'react-native'
+import React, { useState } from 'react'
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 
 import { Colors } from '../../../Constants/Colors';
 import { iconPath } from '../../../Constants/icon';
 import { wp } from '../../../Helpers/Responsiveness';
 import Fonticon from '../../../Constants/FontIcon';
 import Header from '../../../Components/Header';
+import Image_Picker from '../../../Components/Image_Picker';
 
 export default function EditProfile(props) {
+
+    const [picture, setPicture] = useState("")
+    const [pictureSelected, setpictureSelected] = useState(false)
+
+    const openCamera = async (type) => {
+        const res = await Image_Picker(type);
+        console.log("cameraaeResss\n", res.path);
+        if (res === false || res === "cancel") {
+            return;
+        }
+        setpictureSelected(true)
+        setPicture(res.path)
+        // this.setState({ picture: res.path });
+    };
+
     return (
         <View style={styles.container}>
             <Header onPress={() => props.navigation.goBack(null)} title={"Edit Profile"} />
 
             <View style={{ alignItems: "center", }}>
                 <View>
-                    <Image source={iconPath.BLACKLOGO} style={{ width: wp(30), height: wp(30), borderRadius: wp(30) / 2, borderWidth: 2, borderColor: Colors.Yellow, marginTop: wp(15) }} />
-                    <Image source={iconPath.BLACKLOGO} style={{ width: wp(6), height: wp(6), borderRadius: wp(6) / 2, position: "absolute", bottom: 0, right: wp(3), borderWidth: 2, borderColor: Colors.Yellow, }} />
+                    <Image source={pictureSelected ? { uri: picture } : iconPath.BLACKLOGO} style={{ width: wp(30), height: wp(30), borderRadius: wp(30) / 2, borderWidth: 2, borderColor: Colors.Yellow, marginTop: wp(15) }} />
+                    <TouchableOpacity onPress={() => openCamera("gallery")} style={{ position: "absolute", bottom: 0, right: wp(3), borderWidth: 2, borderColor: Colors.Yellow, borderRadius: 100, padding: 2, backgroundColor: Colors.Yellow }}>
+                        <Fonticon type={"Entypo"} name={"camera"} size={wp(5)} color={Colors.White} />
+                    </TouchableOpacity>
                 </View>
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <Text style={{ fontWeight: "bold", color: Colors.Black, fontSize: 18, marginTop: wp(4) }}>James Vinci</Text>
@@ -23,15 +41,15 @@ export default function EditProfile(props) {
                 </View>
 
             </View>
-            <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop:wp(10), marginHorizontal:wp(5) }}>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: wp(10), marginHorizontal: wp(5) }}>
                 <Text style={{ color: Colors.Black, fontSize: 18, marginTop: wp(4) }}>Full name</Text>
                 <Fonticon type={"MaterialIcons"} name={"edit"} size={wp(5)} color={Colors.Yellow} style={{ marginLeft: wp(3), marginTop: 8 }} />
             </View>
-            <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop:wp(3), marginHorizontal:wp(5) }}>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: wp(3), marginHorizontal: wp(5) }}>
                 <Text style={{ color: Colors.Black, fontSize: 18, marginTop: wp(4) }}>Gender</Text>
                 <Fonticon type={"MaterialIcons"} name={"edit"} size={wp(5)} color={Colors.Yellow} style={{ marginLeft: wp(3), marginTop: 8 }} />
             </View>
-            <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop:wp(3), marginHorizontal:wp(5) }}>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: wp(3), marginHorizontal: wp(5) }}>
                 <Text style={{ color: Colors.Black, fontSize: 18, marginTop: wp(4) }}>Birthday</Text>
                 <Fonticon type={"MaterialIcons"} name={"edit"} size={wp(5)} color={Colors.Yellow} style={{ marginLeft: wp(3), marginTop: 8 }} />
             </View>
