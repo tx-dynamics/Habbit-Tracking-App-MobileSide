@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native'
 
+import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 import { Colors } from '../../../Constants/Colors';
 import { iconPath } from '../../../Constants/icon';
 import { wp } from '../../../Helpers/Responsiveness';
@@ -12,12 +13,16 @@ const DATA = [
     { id: "3", title: "Buy" },
     { id: "4", title: "Stake" },
     { id: "1", title: "Deposit" },
-    { id: "2", title: "Withdraw" },
-    { id: "3", title: "Buy" },
-    { id: "4", title: "Stake" },
 ]
-
+const config = {
+    velocityThreshold: 0.1,
+    directionalOffsetThreshold: 1009
+};
 const Yesterday = (props) => {
+
+    const onSwipeLeft=(gestureState)=> {
+        props.navigation.goBack(null)
+    }
     return (
         <View style={styles.container}>
             <View style={styles.headerStyle}>
@@ -73,6 +78,8 @@ const styles = StyleSheet.create({
         elevation: 5,
         flexDirection: "row",
         alignItems: "center",
+        marginTop:wp(-6)
+
     },
     imageStyle: {
         width: wp(10),

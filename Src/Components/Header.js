@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 
 import { Colors } from '../Constants/Colors';
 import { wp } from '../Helpers/Responsiveness';
@@ -13,11 +13,17 @@ export default function Header(props) {
                     <Fonticon type={"Ionicons"} name={"chevron-back"} size={wp(7)} color={Colors.Black}
                         onPress={props.onPress} />
                 </View>
-                <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-                    <View style={{ marginHorizontal: wp(4) }}>
+                <View style={{ flex: 1, alignItems: "center", justifyContent: "center", }}>
+                    <View style={{ marginHorizontal: wp(4), alignSelf: "center" }}>
                         <Text style={{ textAlign: "center", fontSize: 25, marginLeft: wp(-8) }}>{props.title}</Text>
                     </View>
                 </View>
+                {props.savePress &&
+                    <TouchableOpacity onPress={props.savePress}
+                        style={{ marginRight: wp(3), marginLeft: wp(-7) }}>
+                        <Text style={{ color: Colors.Yellow, fontSize: 16 }}>Save</Text>
+                    </TouchableOpacity>
+                }
             </View>
         </View>
     )

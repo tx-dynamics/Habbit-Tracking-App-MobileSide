@@ -58,7 +58,10 @@ export default class InputField extends Component {
         ];
         const allProps = Object.assign({}, this.props, { style: style });
         return (
-            <View style={[styles.textInputStyle, this.props.shadow ? styles.boxWithShadow : null,  { marginTop: marginTop, borderRadius: this.props.borderRadius ? this.props.borderRadius : 10, }]}>
+            <View style={[styles.textInputStyle, this.props.shadow ? styles.boxWithShadow : null, { marginTop: marginTop, borderRadius: this.props.borderRadius ? this.props.borderRadius : 10, }]}>
+                {this.props.borderText &&
+                    <Text style={styles.labelContainer}>{this.props.borderText}</Text>
+                }
                 <TextInput
                     {...allProps}
                     placeholder={this.props.placeholder}
@@ -81,11 +84,11 @@ export default class InputField extends Component {
 }
 const styles = StyleSheet.create({
     textInputStyle: {
-        backgroundColor: "#fff",  
-        flexDirection: "row", 
+        backgroundColor: "#fff",
+        flexDirection: "row",
         alignItems: "center",
-        borderWidth:1,
-        borderColor:Colors.Yellow
+        borderWidth: 1,
+        borderColor: Colors.Yellow
     },
     boxWithShadow: {
         shadowColor: '#000',
@@ -94,7 +97,15 @@ const styles = StyleSheet.create({
         shadowRadius: 10,
         elevation: 5
     },
-
-
-
+    labelContainer: {
+        position: 'absolute',
+        backgroundColor: '#fff',
+        top: wp(-3),
+        left: 25,
+        padding: 5,
+        zIndex: 50,
+        paddingVertical: 0,
+        paddingHorizontal: wp(2),
+        color:Colors.LightGray
+    },
 });

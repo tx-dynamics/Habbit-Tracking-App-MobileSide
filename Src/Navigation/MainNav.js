@@ -27,8 +27,8 @@ function MainNav(props) {
                     <Stack.Navigator screenOptions={{ headerShown: false }}>
                         {/* {props.isLogin ? */}
                         {/* : */}
-                        <Stack.Screen name="BottomTab" component={BottomTab} />
                         <Stack.Screen name="AuthStack" component={AuthStack} />
+                        <Stack.Screen name="BottomTab" component={BottomTab} />
                         <Stack.Screen name="ProfileStack" component={ProfileStack} />
                         {/* } */}
                     </Stack.Navigator>

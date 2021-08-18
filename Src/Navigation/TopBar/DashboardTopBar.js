@@ -8,7 +8,10 @@ import Individual from '../../Screens/MainScreens/Dashboard/Individual';
 import Habits from '../../Screens/MainScreens/Dashboard/Habits';
 import POD from '../../Screens/MainScreens/Dashboard/POD';
 import ALL from '../../Screens/MainScreens/Dashboard/ALL';
-import DateTopBar from '../TopBar/DateTopBar';
+import DateTopBarAll from '../TopBar/DateTopBarAll';
+import DateTopBarPOD from '../TopBar/DateTopBarPOD';
+import DateTopBarIndi from '../TopBar/DateTopBarIndi';
+import DateTopBarHabit from '../TopBar/DateTopBarHabit';
 
 
 const Tab = createMaterialTopTabNavigator();
@@ -26,10 +29,10 @@ const ChatTopBar = () => {
                 backgroundColor: Colors.Yellow,
             }
         }}>
-            <Tab.Screen name="ALL" component={DateTopBar} />
-            <Tab.Screen name="POD" component={POD} />
-            <Tab.Screen name="Individual" component={Individual} />
-            <Tab.Screen name="Habits" component={Habits} />
+            <Tab.Screen name="ALL" component={DateTopBarAll} />
+            <Tab.Screen name="POD" component={DateTopBarPOD} />
+            <Tab.Screen name="Individual" component={DateTopBarIndi} />
+            <Tab.Screen name="Habits" component={DateTopBarHabit} />
         </Tab.Navigator>
     );
 }

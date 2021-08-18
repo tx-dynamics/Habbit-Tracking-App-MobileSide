@@ -1,6 +1,7 @@
 import React from 'react'
 import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native'
 
+import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 import { Colors } from '../../../Constants/Colors';
 import { iconPath } from '../../../Constants/icon';
 import { wp } from '../../../Helpers/Responsiveness';
@@ -12,12 +13,17 @@ const DATA = [
     { id: "3", title: "Buy" },
     { id: "4", title: "Stake" },
     { id: "1", title: "Deposit" },
-    { id: "2", title: "Withdraw" },
-    { id: "3", title: "Buy" },
-    { id: "4", title: "Stake" },
 ]
-
+const config = {
+    velocityThreshold: 0.1,
+    directionalOffsetThreshold: 1009
+};
 const Tomorrow = (props) => {
+
+    const onSwipeLeft = (gestureState) => {
+        props.navigation.goBack(null)
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.headerStyle}>
@@ -48,7 +54,7 @@ const Tomorrow = (props) => {
                 showsVerticalScrollIndicator={false}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item, index }) => (
-                    <TouchableOpacity style={{ backgroundColor: Colors.LightGray, marginTop: wp(2), paddingHorizontal: wp(5), height: wp(25), borderRadius: wp(5), justifyContent: "center" }}>
+                    <TouchableOpacity style={{ backgroundColor: Colors.Gray, marginTop: wp(2), paddingHorizontal: wp(5), height: wp(25), borderRadius: wp(5), justifyContent: "center" }}>
                         <Text style={{ fontSize: 20, fontWeight: "bold", color: Colors.Black }}>Morning me time</Text>
                         <Text style={{ fontSize: 12, marginTop: 6, width: wp(50), color: Colors.Black }}>Wake up before your usual time to focus on yourself</Text>
                     </TouchableOpacity>
@@ -73,6 +79,8 @@ const styles = StyleSheet.create({
         elevation: 5,
         flexDirection: "row",
         alignItems: "center",
+        marginTop:wp(-6)
+
     },
     imageStyle: {
         width: wp(10),
