@@ -14,11 +14,11 @@ export default class ChatScreen extends Component {
             Name: '',
             messages: [{
                 _id: 1,
-                text: 'Hello developer',
+                text: 'Hello developerr',
                 createdAt: new Date(),
                 user: {
                     _id: 2,
-                    name: 'React Native',
+                    name: 'React Nativccce',
                     avatar: 'https://placeimg.com/140/140/any',
                 },
             }],

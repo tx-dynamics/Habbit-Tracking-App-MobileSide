@@ -9,7 +9,7 @@ import Splash from '../Screens/Splash'
 import AuthStack from './Stack/AuthStack';
 import ProfileStack from './Stack/ProfileStack';
 import BottomTab from './BottomNav/BottomTab';
-// import { connect } from 'react-redux'
+import { connect } from 'react-redux'
 
 const Stack = createStackNavigator();
 
@@ -19,18 +19,20 @@ function MainNav(props) {
     return (
         <>
             <StatusBar backgroundColor={'#fff'}
-            barStyle={ 'dark-content'} />
+                barStyle={'dark-content'} />
             {!timePassed ?
                 <Splash />
                 :
                 <NavigationContainer>
                     <Stack.Navigator screenOptions={{ headerShown: false }}>
-                        {/* {props.isLogin ? */}
-                        {/* : */}
-                        <Stack.Screen name="AuthStack" component={AuthStack} />
-                        <Stack.Screen name="BottomTab" component={BottomTab} />
-                        <Stack.Screen name="ProfileStack" component={ProfileStack} />
-                        {/* } */}
+                        {props.isLogin ?
+                            <>
+                                <Stack.Screen name="BottomTab" component={BottomTab} />
+                                <Stack.Screen name="ProfileStack" component={ProfileStack} />
+                            </>
+                            :
+                            <Stack.Screen name="AuthStack" component={AuthStack} />
+                        }
                     </Stack.Navigator>
                 </NavigationContainer>
             }
@@ -43,5 +45,4 @@ const mapStateToProps = (state) => {
         isLogin: state.AuthReducer.isLogin
     }
 }
-// export default connect(mapStateToProps, null)(MainNav);
-export default MainNav;
+export default connect(mapStateToProps, null)(MainNav);

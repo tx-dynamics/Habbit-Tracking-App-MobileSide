@@ -1,62 +1,76 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet, FlatList } from 'react-native'
 import { Colors } from '../../../Constants/Colors';
 import { wp } from '../../../Helpers/Responsiveness';
+import Loader from '../../../Components/Loader';
+import Axios from '../../../Components/Axios';
+import { connect } from 'react-redux';
+import { SetSession } from '../../../Redux/Actions/Actions';
 
-const P_Data = [
 
-    {
-        name: "POD Name",
-        points: 1
-    },
-    {
-        name: "POD Name",
-        points: 3
-    },
-    {
-        name: "POD Name",
-        points: 5
-    },
-    {
-        name: "POD Name",
-        points: 7
-    },
-    {
-        name: "POD Name",
-        points: 8
-    },
-    {
-        name: "POD Name",
-        points: 10
-    },
-]
+const POD = (props) => {
+    const [POD, setPOD] = useState('');
+    const [loading, setLoading] = useState(false)
 
-const POD = () => {
+    useEffect(() => {
+        getTodayTasks()
+    }, [])
+
+    const getTodayTasks = async () => {
+        setLoading(true)
+        let param = {};
+        param["companyId"] = props.userData.company;
+        param["startDate"] = "2021-08-02";
+        await Axios("dashboard/department", param, 'POST').then(async (response) => {
+            // alert(JSON.stringify(response))
+            if (response.error === undefined) {
+                setPOD(response)
+            } else {
+                alert(JSON.stringify(response.error))
+            }
+            setLoading(false)
+        })
+            .catch((err) => {
+                console.warn(err)
+                setLoading(false)
+            })
+    }
     return (
         <View style={styles.container}>
             <View style={{ marginHorizontal: wp(5) }}>
 
-                <Text style={{ color: Colors.LightGray, marginTop: wp(5), alignSelf: "center" }}>
+                {/* <Text style={{ color: Colors.LightGray, marginTop: wp(5), alignSelf: "center" }}>
                     1 July 2021
              <Text style={{ color: Colors.Yellow }}> - 16 July -</Text>
-               1 August 2021</Text>
+               1 August 2021</Text> */}
 
                 <FlatList
-                    data={P_Data}
+                    data={POD}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item, index }) => (
                         <View style={{ marginTop: wp(8), flexDirection: "row" }}>
-                            <Text>{item.name}</Text>
-                            <View style={{ backgroundColor: Colors.Yellow, height: 4, borderRadius: 30, marginLeft: 5, marginRight: 5, flex: item.points / 10, alignSelf: "center" }} />
-                            <Text style={{ marginLeft: 10, color: Colors.Yellow }}>{item.points}</Text>
+                            <Text style={{width:wp(30)}}>{item.fullName}</Text>
+                            <View style={{ backgroundColor: Colors.Yellow, height: 4, borderRadius: 30, marginLeft: 5, marginRight: 5, flex: item.score / 10, alignSelf: "center" }} />
+                            <Text style={{ marginLeft: 10, color: Colors.Yellow }}>{item.score}</Text>
                         </View>
                     )} />
             </View>
-
+            <Loader loading={loading} />
         </View>
     )
 }
-export default POD;
+const mapStateToProps = (state) => {
+    return {
+        userId: state.AuthReducer.userId,
+        userData: state.AuthReducer.userData,
+    }
+}
+const mapDispatchToProps = (dispatch) => {
+    return {
+        SessionMaintain: (data) => dispatch(SetSession(data))
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(POD);
 const styles = StyleSheet.create({
     container: {
         flex: 1,

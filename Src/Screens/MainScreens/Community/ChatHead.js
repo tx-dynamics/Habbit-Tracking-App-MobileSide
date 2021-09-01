@@ -45,7 +45,7 @@ CHAT_HEAD = [
 
 export default function ChatHead(props) {
     const chatHeadPress = (item) => {
-        props.navigation.navigate("ChatScreen",{item})
+        props.navigation.navigate("ChatScreen1",{item})
     }
 
     return (

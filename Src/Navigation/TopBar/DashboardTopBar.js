@@ -29,10 +29,10 @@ const ChatTopBar = () => {
                 backgroundColor: Colors.Yellow,
             }
         }}>
-            <Tab.Screen name="ALL" component={DateTopBarAll} />
-            <Tab.Screen name="POD" component={DateTopBarPOD} />
-            <Tab.Screen name="Individual" component={DateTopBarIndi} />
-            <Tab.Screen name="Habits" component={DateTopBarHabit} />
+            <Tab.Screen name="ALL" component={ALL} />
+            <Tab.Screen name="Individual" component={Individual} />
+            <Tab.Screen name="POD" component={POD} />
+            <Tab.Screen name="Habits" component={Habits} />
         </Tab.Navigator>
     );
 }

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native'
 
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
@@ -6,6 +6,10 @@ import { Colors } from '../../../Constants/Colors';
 import { iconPath } from '../../../Constants/icon';
 import { wp } from '../../../Helpers/Responsiveness';
 import Fonticon from '../../../Constants/FontIcon';
+import Loader from '../../../Components/Loader';
+import Axios from '../../../Components/Axios';
+import { connect } from 'react-redux';
+import { SetSession } from '../../../Redux/Actions/Actions';
 
 const DATA = [
     { id: "1", title: "Deposit" },
@@ -19,9 +23,49 @@ const config = {
     directionalOffsetThreshold: 1009
 };
 const Yesterday = (props) => {
+    const [tomorrowHabbit, setTomorrowHabbit] = useState('');
+    const [loading, setLoading] = useState(false)
+    useEffect(() => {
+        getTodayTasks()
+    }, [])
 
-    const onSwipeLeft=(gestureState)=> {
-        props.navigation.goBack(null)
+    const getTodayTasks = async () => {
+        setLoading(true)
+        let param = {};
+        param["companyId"] = props.userData.company;
+        param["userId"] = props.userId;
+        await Axios("challange/yesterday", param, 'POST').then(async (response) => {
+            if (response.error === undefined) {
+                // alert(JSON.stringify(response.habbits))
+                setTomorrowHabbit(response.habbits)
+            } else {
+                alert(JSON.stringify(response.error))
+            }
+            setLoading(false)
+        })
+            .catch((err) => {
+                console.warn(err)
+                setLoading(false)
+            })
+    }
+    const completeHabbit = async (habbitId) => {
+        setLoading(true)
+        let param = {};
+        param["user"] = props.userId;
+        param["habbit"] = habbitId;
+        param["department"] = props.userData.department;
+        param["company"] = props.userData.company;
+        await Axios("challange/completeHabbit", param, 'POST').then(async (response) => {
+            setLoading(false)
+        })
+            .catch(async (err) => {
+                if (err.toString().includes("Done")) {
+                    await getTodayTasks()
+                } else {
+                    console.warn("jjj" + err)
+                }
+                setLoading(false)
+            })
     }
     return (
         <View style={styles.container}>
@@ -45,24 +89,40 @@ const Yesterday = (props) => {
             </View>
 
             <View style={{ flexDirection: "row", marginHorizontal: wp(5), marginTop: wp(10) }}>
-                <Text style={{ fontWeight: "bold", color:Colors.LightGray }}>Your Yesterday habit</Text>
+                <Text style={{ fontWeight: "bold", color: Colors.LightGray }}>Your Yesterday habit</Text>
             </View>
             <FlatList
                 style={{ marginTop: wp(5), marginHorizontal: wp(5) }}
-                data={DATA}
+                data={tomorrowHabbit}
+                extraData={tomorrowHabbit}
                 showsVerticalScrollIndicator={false}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item, index }) => (
-                    <TouchableOpacity style={{ backgroundColor: Colors.Yellow, marginTop: wp(2), paddingHorizontal: wp(5), height: wp(25), borderRadius: wp(5), justifyContent: "center" }}>
-                        <Text style={{ fontSize: 20, fontWeight: "bold", color: Colors.White }}>Morning me time</Text>
-                        <Text style={{ fontSize: 12, marginTop: 6, width: wp(50),  color: Colors.White }}>Wake up before your usual time to focus on yourself</Text>
+                    // <TouchableOpacity onPress={() => select(item.id)}
+                    <TouchableOpacity
+                        activeOpacity={0.9}
+                        // onPress={() => completeHabbit(item._id)}
+                        style={{ backgroundColor: item.state === "done" ? Colors.Yellow : Colors.Gray, marginTop: wp(2), paddingHorizontal: wp(5), height: wp(25), borderRadius: wp(5), justifyContent: "center" }}>
+                        <Text style={{ fontSize: 20, fontWeight: "bold", color: item.state === "done" ? Colors.White : Colors.Black }}>{item.habbitTitle}</Text>
+                        <Text style={{ fontSize: 12, textAlign: "justify", marginTop: 6, width: wp(60), color: item.state === "done" ? Colors.White : Colors.Black }}>{item.habbitDescription}</Text>
                     </TouchableOpacity>
                 )} />
-
+            <Loader loading={loading} />
         </View>
     )
 }
-export default Yesterday;
+const mapStateToProps = (state) => {
+    return {
+        userId: state.AuthReducer.userId,
+        userData: state.AuthReducer.userData,
+    }
+}
+const mapDispatchToProps = (dispatch) => {
+    return {
+        SessionMaintain: (data) => dispatch(SetSession(data))
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Yesterday);
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -78,7 +138,7 @@ const styles = StyleSheet.create({
         elevation: 5,
         flexDirection: "row",
         alignItems: "center",
-        marginTop:wp(-6)
+        marginTop: wp(-6)
 
     },
     imageStyle: {

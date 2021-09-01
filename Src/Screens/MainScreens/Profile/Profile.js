@@ -8,8 +8,18 @@ import Fonticon from '../../../Constants/FontIcon';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import Header from '../../../Components/Header';
 import ProfileButtons from './profileButtons';
+import { SetSession } from '../../../Redux/Actions/Actions';
+import { connect } from 'react-redux';
 
-export default function Profile(props) {
+const Profile=(props)=> {
+
+    const logout=() =>{
+        let data = {}
+        data["userId"] = "";
+        data["userData"] = '';
+        data["isLogin"] = false;
+        props.SessionMaintain(data)
+    }
     return (
         <View style={styles.container}>
             <Header onPress={() => props.navigation.goBack(null)} title={"Profile"} />
@@ -22,10 +32,22 @@ export default function Profile(props) {
             <View style={styles.bottomContainer}>
                 <ProfileButtons icon={iconPath.EditProfile} onPress={() =>props.navigation.navigate("EditProfile")} name={"Edit your Profile"}/>
                 <ProfileButtons icon={iconPath.Settings} onPress={() =>props.navigation.navigate("Settings")} name={"Settings"}/>
+                <ProfileButtons icon={iconPath.Settings}
+                 onPress={() =>logout()}
+                 name={"Log out"}
+                />
             </View>
         </View>
     )
 }
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+      SessionMaintain: (userData) => dispatch(SetSession(userData)),
+    }
+  }
+  
+  export default connect(null, mapDispatchToProps)(Profile);
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -36,8 +58,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         shadowColor: '#000',
         shadowOffset: { width: 1, height: -10 },
-        shadowOpacity: 0.4,
-        shadowRadius: 3,
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
         elevation: 10,
         flex: 1.3,
         borderTopLeftRadius: 35,
