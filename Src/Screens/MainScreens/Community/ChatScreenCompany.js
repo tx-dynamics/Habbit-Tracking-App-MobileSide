@@ -49,7 +49,7 @@ const ChatScreenCompany = (props) => {
             setMessages((messages) => [message, ...messages]);
         });
         return () =>{
-            alert("hhh")
+            // alert("hhh")
         }
     }, []);
 

@@ -14,8 +14,8 @@ function AuthStack(props) {
     return (
         <>
             <Stack.Navigator screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="Swipe" component={Swipe} />
                 <Stack.Screen name="NewHome" component={NewHome} />
+                <Stack.Screen name="Swipe" component={Swipe} />
                 <Stack.Screen name="Today" component={Today} />
                 <Stack.Screen name="Yesterday" component={Yesterday} />
                 <Stack.Screen name="Tomorrow" component={Tomorrow} />

@@ -1,6 +1,6 @@
 import React from 'react';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
-import IoniconsIcon from 'react-native-vector-icons/Ionicons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import EvilIconsIcon from 'react-native-vector-icons/EvilIcons';
 import FeatherIcon from 'react-native-vector-icons/Feather';
@@ -25,8 +25,8 @@ const fontIcon = ({type, name, size, color, ...props}) => {
         case "FontAwesome5Pro": return <FontAwesome5ProIcon name={name} size={size || 16} color={color || '#fff'} {...props}/>
         case "Fontisto": return <FontistoIcon name={name} size={size || 16} color={color || '#fff'} />
         case "Material": case "MaterialIcons": return <MaterialIcon name={name} size={size || 16} color={color || '#fff'} {...props}/>
-        case "Ionicons": return <IoniconsIcon name={name} size={size || 16} color={color || '#fff'} {...props}/>
-        default: return <IoniconsIcon name={name} size={size || 16} color={color || '#fff'} />
+        case "Ionicons": return <Ionicons name={name} size={size || 16} color={color || '#fff'} {...props}/>
+        default: return <Ionicons name={name} size={size || 16} color={color || '#fff'} />
     }
 }
 
