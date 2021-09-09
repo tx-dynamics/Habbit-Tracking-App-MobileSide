@@ -6,6 +6,7 @@ import Loader from '../../../Components/Loader';
 import Axios from '../../../Components/Axios';
 import { connect } from 'react-redux';
 import { SetSession } from '../../../Redux/Actions/Actions';
+import moment from 'moment'
 
 const Individual = (props) => {
     const [individual, setIndividual] = useState('');
@@ -19,7 +20,7 @@ const Individual = (props) => {
         setLoading(true)
         let param = {};
         param["companyId"] = props.userData.company;
-        param["startDate"] = "2021-08-02";
+        param["startDate"] = moment(new Date()).format('YYYY-MM-DD');
         await Axios("dashboard/individual", param, 'POST').then(async (response) => {
             if (response.error === undefined) {
                 setIndividual(response)
@@ -42,9 +43,13 @@ const Individual = (props) => {
              <Text style={{ color: Colors.Yellow }}> - 16 July -</Text>
                1 August 2021</Text> */}
 
-                <Text style={{ color: Colors.Yellow, marginTop: wp(7), fontWeight: "bold" }}>Top 50</Text>
+                <Text style={{ color: Colors.Yellow, marginTop: wp(7), fontWeight: "bold", }}>Top 50</Text>
                 <FlatList
+                    contentContainerStyle={{ paddingBottom: wp(20) }}
                     data={individual}
+                    extraData={individual}
+                    onRefresh={() => getTodayTasks()}
+                    refreshing={loading}
                     showsVerticalScrollIndicator={false}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item, index }) => (

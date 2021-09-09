@@ -6,6 +6,7 @@ import Loader from '../../../Components/Loader';
 import Axios from '../../../Components/Axios';
 import { connect } from 'react-redux';
 import { SetSession } from '../../../Redux/Actions/Actions';
+import moment from 'moment'
 
 
 const POD = (props) => {
@@ -20,7 +21,8 @@ const POD = (props) => {
         setLoading(true)
         let param = {};
         param["companyId"] = props.userData.company;
-        param["startDate"] = "2021-08-02";
+        param["departmentId"] = props.userData.department;
+        param["startDate"] = moment(new Date()).format('YYYY-MM-DD');
         await Axios("dashboard/department", param, 'POST').then(async (response) => {
             // alert(JSON.stringify(response))
             if (response.error === undefined) {
@@ -46,6 +48,10 @@ const POD = (props) => {
 
                 <FlatList
                     data={POD}
+                    extraData={POD}
+                    onRefresh={() => getTodayTasks()}
+                    refreshing={loading}
+                    contentContainerStyle={{ paddingBottom: wp(20) }}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item, index }) => (
                         <View style={{ marginTop: wp(8), flexDirection: "row" }}>

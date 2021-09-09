@@ -7,9 +7,10 @@ import { connect } from 'react-redux';
 import Loader from '../../../Components/Loader';
 import Axios from '../../../Components/Axios';
 import { SetSession } from '../../../Redux/Actions/Actions';
+import moment from 'moment'
 
 const P_Data = [
-   
+
     {
         name: "Ali nawax",
         points: 3
@@ -22,24 +23,34 @@ const P_Data = [
         name: "Ali nawax",
         points: 3
     },
-   
+
 ]
 
-const Habits = (props) => {
+const Habits = ({ navigation, ...props }) => {
 
     const [POD, setPOD] = useState('');
     const [challangeTitle, setChallangeTitle] = useState('');
     const [loading, setLoading] = useState(false)
 
+    // useEffect(() => {
+    //     getTodayTasks()
+    // }, [])
+
     useEffect(() => {
         getTodayTasks()
-    }, [])
+        const unsubscribe = navigation.addListener('didFocus', () => {
+            getTodayTasks()
+        });
+        return () => {
+            unsubscribe
+        }
+    }, [navigation]);
 
     const getTodayTasks = async () => {
         setLoading(true)
         let param = {};
         param["companyId"] = props.userData.company;
-        param["startDate"] = "2021-08-02";
+        param["startDate"] = moment(new Date()).format('YYYY-MM-DD');
         await Axios("dashboard/habits", param, 'POST').then(async (response) => {
             // alert(JSON.stringify(response.habbits))
             if (response.error === undefined) {
@@ -65,17 +76,21 @@ const Habits = (props) => {
              <Text style={{ color: Colors.Yellow }}> - 16 July -</Text>
                1 August 2021</Text> */}
 
-            <Text style={{ color: Colors.Yellow, marginTop: wp(7), fontWeight: "bold" }}>{challangeTitle}</Text>
+                <Text style={{ color: Colors.Yellow, marginTop: wp(7), fontWeight: "bold" }}>{challangeTitle}</Text>
                 <FlatList
                     data={POD}
+                    extraData={POD}
+                    onRefresh={() => getTodayTasks()}
+                    refreshing={loading}
+                    contentContainerStyle={{ paddingBottom: wp(20) }}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item, index }) => (
-                        <View style={{ marginTop: wp(8), flexDirection:"row" }}>
+                        <View style={{ marginTop: wp(8), flexDirection: "row" }}>
                             <View>
-                            <Text>{item.habbitTitle}</Text>
-                            <Text>{item.habbitDescription}</Text>
+                                <Text>{item.habbitTitle}</Text>
+                                <Text>{item.habbitDescription}</Text>
                             </View>
-                            <Text style={{marginLeft:10, color:Colors.Yellow}}>{item.score}</Text>
+                            <Text style={{ marginLeft: 10, color: Colors.Yellow }}>{item.score}</Text>
                         </View>
                     )} />
                 {/* <Text style={{ color: Colors.Yellow, marginTop: wp(7), fontWeight: "bold" }}>Reading (Top 3)</Text>

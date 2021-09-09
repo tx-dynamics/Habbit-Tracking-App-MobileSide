@@ -231,6 +231,7 @@ const NewHome = (props) => {
                 <FlatList
                     data={habbitArray}
                     // extraData={DATA}
+                    contentContainerStyle={{ paddingBottom: wp(5) }}
                     showsVerticalScrollIndicator={false}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item, index }) => (
