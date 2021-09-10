@@ -20,7 +20,7 @@ const Individual = (props) => {
         setLoading(true)
         let param = {};
         param["companyId"] = props.userData.company;
-        param["startDate"] = moment(new Date()).format('YYYY-MM-DD');
+        param["startDate"] = props.ChallengestartDate;
         await Axios("dashboard/individual", param, 'POST').then(async (response) => {
             if (response.error === undefined) {
                 setIndividual(response)
@@ -67,6 +67,7 @@ const mapStateToProps = (state) => {
     return {
         userId: state.AuthReducer.userId,
         userData: state.AuthReducer.userData,
+        ChallengestartDate: state.HomeReducer.ChallengestartDate,
     }
 }
 const mapDispatchToProps = (dispatch) => {

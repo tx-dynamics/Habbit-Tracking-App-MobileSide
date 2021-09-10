@@ -21,8 +21,9 @@ const ALL = (props) => {
     const getTodayTasks = async () => {
         setLoading(true)
         let param = {};
+        // alert(JSON.stringify(props.userData))
         param["companyId"] = props.userData.company;
-        param["startDate"] = moment(new Date()).format('YYYY-MM-DD');
+        param["startDate"] = props.ChallengestartDate;
         await Axios("dashboard/companyDepartments", param, 'POST').then(async (response) => {
             // alert(JSON.stringify(response))
             if (response.error === undefined) {
@@ -71,6 +72,7 @@ const mapStateToProps = (state) => {
     return {
         userId: state.AuthReducer.userId,
         userData: state.AuthReducer.userData,
+        ChallengestartDate: state.HomeReducer.ChallengestartDate,
     }
 }
 const mapDispatchToProps = (dispatch) => {

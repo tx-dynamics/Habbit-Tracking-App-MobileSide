@@ -8,7 +8,8 @@ import Fonticon from '../../../Constants/FontIcon';
 import Loader from '../../../Components/Loader';
 import Axios from '../../../Components/Axios';
 import { connect } from 'react-redux';
-import moment from 'moment'
+import moment from 'moment';
+import { startDateStore } from '../../../Redux/Actions/Actions'
 
 const DATA = [
     { id: "1", ChallengeName: "Morning Workout", workOutQuantity: "20 min" },
@@ -87,11 +88,13 @@ const NewHome = (props) => {
         param["userId"] = props.userId;
         await Axios("challange/date", param, 'POST').then(async (response) => {
             // alert(date+JSON.stringify(response))
-            // console.log("aaaasassaassa "+JSON.stringify(response.habbits))
+            // console.log("aaaasassaassa " + JSON.stringify(response.startDate.split('T')[0]))
             if (response.msg === undefined) {
                 getDateDetails(response)
                 setHabbitArray(response.habbits)
                 setChallengeFound(true)
+                // response.startDate.split('T')[0]
+                props.storeStartDate({"ChallengestartDate" : response.startDate.split('T')[0] })
             } else {
                 // setChallengeFound(false)
             }
@@ -174,12 +177,7 @@ const NewHome = (props) => {
         } else {
             // alert("not Equal")
         }
-
-
-
     }
-
-
 
     const CompleteHabbithhh = (index) => {
         // alert(index)
@@ -281,7 +279,7 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        SessionMaintain: (data) => dispatch(SetSession(data))
+        storeStartDate: (data) => dispatch(startDateStore(data))
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(NewHome);
@@ -293,7 +291,7 @@ const styles = StyleSheet.create({
     imageStyle: {
         width: wp(14),
         height: wp(14),
-        resizeMode:"cover",
+        resizeMode: "cover",
         borderRadius: wp(7)
     }
 })

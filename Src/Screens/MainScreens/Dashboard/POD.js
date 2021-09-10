@@ -19,10 +19,11 @@ const POD = (props) => {
 
     const getTodayTasks = async () => {
         setLoading(true)
+        // alert(props.ChallengestartDate)
         let param = {};
         param["companyId"] = props.userData.company;
         param["departmentId"] = props.userData.department;
-        param["startDate"] = moment(new Date()).format('YYYY-MM-DD');
+        param["startDate"] = props.ChallengestartDate;
         await Axios("dashboard/department", param, 'POST').then(async (response) => {
             // alert(JSON.stringify(response))
             if (response.error === undefined) {
@@ -69,6 +70,7 @@ const mapStateToProps = (state) => {
     return {
         userId: state.AuthReducer.userId,
         userData: state.AuthReducer.userData,
+        ChallengestartDate: state.HomeReducer.ChallengestartDate,
     }
 }
 const mapDispatchToProps = (dispatch) => {
