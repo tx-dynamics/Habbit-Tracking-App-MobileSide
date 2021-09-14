@@ -2,7 +2,7 @@ import {
     SESSION,
     ADD_HABBIT,
     COMPANY_DATA,
-    START_DATE
+    START_DATE,
 } from '../Constants'
 
 export const SetSession = (data) => {

@@ -42,7 +42,7 @@ const Login = (props) => {
             param["email"] = email;
             param["password"] = password;
             await Axios("user/login", param, 'POST').then(async (response) => {
-                alert(JSON.stringify(response))
+                // alert(JSON.stringify(response))
                 if (response.error === undefined) {
                     let data = {}
                     data["userId"] = response._id;

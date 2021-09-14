@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useFocusEffect } from '@react-navigation/native';
 import { View, Text, StyleSheet, FlatList } from 'react-native'
 import { Colors } from '../../../Constants/Colors';
 import { wp } from '../../../Helpers/Responsiveness';
@@ -13,12 +14,15 @@ const POD = (props) => {
     const [POD, setPOD] = useState('');
     const [loading, setLoading] = useState(false)
 
-    useEffect(() => {
-        getTodayTasks()
-    }, [])
+
+    useFocusEffect(
+        React.useCallback(() => {
+            getTodayTasks()
+        }, [])
+      );
 
     const getTodayTasks = async () => {
-        setLoading(true)
+        // setLoading(true)
         // alert(props.ChallengestartDate)
         let param = {};
         param["companyId"] = props.userData.company;
@@ -31,11 +35,11 @@ const POD = (props) => {
             } else {
                 alert(JSON.stringify(response.error))
             }
-            setLoading(false)
+            // setLoading(false)
         })
             .catch((err) => {
                 console.warn(err)
-                setLoading(false)
+                // setLoading(false)
             })
     }
     return (
@@ -50,8 +54,8 @@ const POD = (props) => {
                 <FlatList
                     data={POD}
                     extraData={POD}
-                    onRefresh={() => getTodayTasks()}
-                    refreshing={loading}
+                    // onRefresh={() => getTodayTasks()}
+                    // refreshing={loading}
                     contentContainerStyle={{ paddingBottom: wp(20) }}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item, index }) => (

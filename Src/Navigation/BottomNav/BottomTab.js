@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, Platform } from 'react-native'
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Today from '../../Screens/MainScreens/Home/Today'
@@ -20,13 +20,14 @@ const BottomTab = () => {
     return (
         <Tab.Navigator tabBarOptions={{
             showLabel: false,
-            keyboardHidesTabBar: true,
+            // {Platform.OS === 'ios' ?
+            keyboardHidesTabBar: Platform.OS === 'ios' ? false : true,
             style: {
-              },
-              tabStyle: {
-              },
-        
-            
+            },
+            tabStyle: {
+            },
+
+
         }} screenOptions={{ headerShown: false, }}>
             <Tab.Screen name="HomeStack" component={HomeStack}
                 options={{

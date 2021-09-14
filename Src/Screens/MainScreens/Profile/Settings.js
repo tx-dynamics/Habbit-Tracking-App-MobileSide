@@ -19,10 +19,12 @@ export default function Settings(props) {
     const Navi = (id) => {
         if (id === "1") {
             props.navigation.navigate("ChangePassword")
-
+            
         } else if (id === "2") {
+            props.navigation.navigate("PrivacyPolicy")
 
         } else if (id === "3") {
+            props.navigation.navigate("HelpCenter")
 
         }
     }

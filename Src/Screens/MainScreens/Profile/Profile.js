@@ -21,13 +21,13 @@ const Profile = (props) => {
         // ChangeName()
         // getUser()
         setValues()
-    }, [])
-    const setValues = () => {
+    }, [props.userData.profileImage])
+    const setValues =async () => {
         // alert(JSON.stringify(props.userData.gender))
         if (props.userData.profileImage === undefined) {
         }
         else {
-            setImagebase64(props.userData.profileImage)
+           await setImagebase64(props.userData.profileImage)
             setpictureSelected(true)
         }
         setFullName(props.userData.fullName)

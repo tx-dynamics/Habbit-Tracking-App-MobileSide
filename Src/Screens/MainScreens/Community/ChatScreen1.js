@@ -37,7 +37,7 @@ const ChatScreen1 = (props) => {
     })
       .then((response) => response.json())
       .then((response) => {
-        alert(JSON.stringify(response))
+        // alert(JSON.stringify(response))
         let msg = {
           _id: 1,
           text: 'Hello developer',

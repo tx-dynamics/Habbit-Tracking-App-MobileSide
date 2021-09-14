@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, Image, TextInput } from 'react-native'
+import {
+    View, Text, FlatList, StyleSheet, Image, TextInput, Platform,
+    KeyboardAvoidingView, ScrollView
+} from 'react-native'
 import { GiftedChat } from 'react-native-gifted-chat';
 import io from "socket.io-client";
 
@@ -18,6 +21,9 @@ var socket;
 const ChatScreenCompany = (props) => {
     const [messages, setMessages] = useState('');
     const [newMessage, setNewMessage] = useState('')
+    const [pictureSelected, setpictureSelected] = useState(false)
+    const [Imagebase64, setImagebase64] = useState("")
+
 
     const getAllMessages = async () => {
         fetch(BaseUrl + "message/" + props.userData.company, {
@@ -26,9 +32,10 @@ const ChatScreenCompany = (props) => {
         })
             .then((response) => response.json())
             .then((response) => {
+                // console.log("hdhjhdshsd" + JSON.stringify(response))
                 setMessages(response.reverse())
             })
-            .catch((err) => {console.log(err)})
+            .catch((err) => { console.log(err) })
     };
 
     useEffect(() => {
@@ -44,11 +51,25 @@ const ChatScreenCompany = (props) => {
     }, [])
 
     useEffect(() => {
+        setValues()
+    }, [props.userData.profileImage])
+
+    const setValues = async () => {
+        if (props.userData.profileImage === undefined) {
+        }
+        else {
+            // alert(JSON.stringify(props.userData.profileImage))
+            await setImagebase64(props.userData.profileImage)
+            setpictureSelected(true)
+        }
+    }
+
+    useEffect(() => {
         socket.on("message", (message) => {
-            console.log("Recieve Messagessss: ", message);
+            // console.log("Recieve Messagessss: ", message);
             setMessages((messages) => [message, ...messages]);
         });
-        return () =>{
+        return () => {
             // alert("hhh")
         }
     }, []);
@@ -75,7 +96,7 @@ const ChatScreenCompany = (props) => {
                 renderItem={({ item, index }) => (
                     <View style={{ marginVertical: wp(5), marginHorizontal: wp(4), }}>
                         <View style={{ flexDirection: "row", flex: 1, }}>
-                            <Image source={iconPath.BLACKLOGO} style={{ width: wp(14), height: wp(14), borderRadius: wp(100) }} />
+                            <Image source={{ uri: `data:image/jpeg;base64,${item.profileImage}` }} style={{ width: wp(14), height: wp(14), borderRadius: wp(100) }} />
                             <View style={{ marginLeft: wp(3), justifyContent: "center" }}>
                                 <Text style={{ fontSize: 19 }}>{item.userName}</Text>
                                 {/* <Text style={{ color: Colors.gray, fontSize: 12 }}>{"12 hr ago"}</Text> */}
@@ -84,25 +105,55 @@ const ChatScreenCompany = (props) => {
                         <Text style={{ marginTop: 10, marginLeft: 5 }}>{item.text}</Text>
                     </View>
                 )} />
-            <View style={[{ flex: .15, justifyContent: "center", }]}>
-                <View style={[styles.boxWithShadow, { flexDirection: "row", paddingLeft: wp(4), height: 48, alignItems: "center", paddingRight: wp(2) }]}>
-                    <View style={{ flex: .12, }}>
-                        <Image source={iconPath.BLACKLOGO} style={{ width: wp(8), height: wp(8), borderRadius: wp(100) }} />
-                    </View>
-                    <View style={{ flex: .8, }}>
-                        <TextInput placeholder={"Post something"}
-                            placeholderTextColor={Colors.Yellow}
-                            value={newMessage}
-                            onChangeText={(newMessage) => setNewMessage(newMessage)} />
-                    </View>
-                    <Fonticon type={"MaterialIcons"} name={"send"} size={wp(8)} color={Colors.Yellow}
-                        style={{ flex: .12 }}
-                        onPress={() => onSend()}
-                    />
-                </View>
-            </View>
+            {/* {Platform.OS === 'ios' ?
+                        <View style={[{ justifyContent: "center", position:"absolute", bottom:10, width:wp(100) }]}>
+                            <View style={[styles.boxWithShadow, { flexDirection: "row", paddingLeft: wp(4), height: 48, alignItems: "center", paddingRight: wp(2) }]}>
+                                <View style={{ flex: .12, }}>
+                                    <Image source={pictureSelected ? { uri: `data:image/jpeg;base64,${Imagebase64}` } : iconPath.BLACKLOGO} style={styles.imageStyle} />
 
-        </View>
+                                </View>
+
+                                <View style={{ flex: .8}}>
+                                    <TextInput placeholder={"Post something"}
+                                        placeholderTextColor={Colors.Yellow}
+                                        value={newMessage}
+                                        onChangeText={(newMessage) => setNewMessage(newMessage)} />
+                                </View>
+
+
+                                <Fonticon type={"MaterialIcons"} name={"send"} size={wp(8)} color={Colors.Yellow}
+                                    style={{ flex: .12 }}
+                                    onPress={() => onSend()}
+                                />
+                            </View>
+                        </View>
+                : */}
+                <View style={[{ flex: .15, justifyContent: "center", }]}>
+                    <View style={[styles.boxWithShadow, { flexDirection: "row", paddingLeft: wp(4), height: 48, alignItems: "center", paddingRight: wp(2) }]}>
+                        <View style={{ flex: .12, }}>
+                            {/* <Image source={iconPath.BLACKLOGO} style={{ width: wp(8), height: wp(8), borderRadius: wp(100) }} /> */}
+                            <Image source={pictureSelected ? { uri: `data:image/jpeg;base64,${Imagebase64}` } : iconPath.BLACKLOGO} style={styles.imageStyle} />
+
+                        </View>
+
+                        <View style={{ flex: .8, }}>
+                            <TextInput placeholder={"Post something"}
+                                placeholderTextColor={Colors.Yellow}
+                                value={newMessage}
+                                onChangeText={(newMessage) => setNewMessage(newMessage)} />
+                        </View>
+
+
+                        <Fonticon type={"MaterialIcons"} name={"send"} size={wp(8)} color={Colors.Yellow}
+                            style={{ flex: .12 }}
+                            onPress={() => onSend()}
+                        />
+                    </View>
+                </View>
+
+             {/* } */}
+
+        </View >
     );
 };
 
@@ -132,5 +183,10 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         marginHorizontal: wp(3),
         borderRadius: 24
+    },
+    imageStyle: {
+        width: wp(8),
+        height: wp(8),
+        borderRadius: wp(8)
     }
 })

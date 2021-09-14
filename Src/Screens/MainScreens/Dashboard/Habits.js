@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-
+import { useFocusEffect } from '@react-navigation/native';
 import { View, Text, StyleSheet, FlatList } from 'react-native'
 import { Colors } from '../../../Constants/Colors';
 import { wp } from '../../../Helpers/Responsiveness';
@@ -30,40 +30,47 @@ const Habits = ({ navigation, ...props }) => {
 
     const [POD, setPOD] = useState('');
     const [challangeTitle, setChallangeTitle] = useState('');
+    const [habbitMapArray, sethabbitMapArray] = useState('');
     const [loading, setLoading] = useState(false)
 
-    // useEffect(() => {
-    //     getTodayTasks()
-    // }, [])
 
-    useEffect(() => {
-        getTodayTasks()
-        const unsubscribe = navigation.addListener('didFocus', () => {
+    useFocusEffect(
+        React.useCallback(() => {
             getTodayTasks()
-        });
-        return () => {
-            unsubscribe
-        }
-    }, [navigation]);
+        }, [])
+    );
 
     const getTodayTasks = async () => {
-        setLoading(true)
+        // setLoading(true)
         let param = {};
         param["companyId"] = props.userData.company;
         param["startDate"] = props.ChallengestartDate;
         await Axios("dashboard/habits", param, 'POST').then(async (response) => {
-            // alert(JSON.stringify(response.habbits))
+            // alert("sdsdsdsds" + JSON.stringify(response.challange.habbits.length))
             if (response.error === undefined) {
-                setPOD(response.habbits)
-                setChallangeTitle(response.challangeTitle)
+
+                var perChunk = 3
+                var result = {}
+                result = response.usersArray.reduce((resultArray, item, index) => {
+                    const chunkIndex = Math.floor(index / perChunk)
+                    if (!resultArray[chunkIndex]) {
+                        resultArray[chunkIndex] = []
+                    }
+                    resultArray[chunkIndex].push(item)
+                    return resultArray
+                }, [])
+                sethabbitMapArray(result)
+                setPOD(response.challange.habbits)
+                setChallangeTitle(response.challange.challangeTitle)
+
             } else {
                 alert(JSON.stringify(response.error))
             }
-            setLoading(false)
+            // setLoading(false)
         })
             .catch((err) => {
                 console.warn(err)
-                setLoading(false)
+                // setLoading(false)
             })
     }
 
@@ -75,35 +82,26 @@ const Habits = ({ navigation, ...props }) => {
                     1 July 2021
              <Text style={{ color: Colors.Yellow }}> - 16 July -</Text>
                1 August 2021</Text> */}
-
                 <Text style={{ color: Colors.Yellow, marginTop: wp(7), fontWeight: "bold" }}>{challangeTitle}</Text>
                 <FlatList
                     data={POD}
                     extraData={POD}
-                    onRefresh={() => getTodayTasks()}
-                    refreshing={loading}
+                    showsVerticalScrollIndicator={false}
                     contentContainerStyle={{ paddingBottom: wp(20) }}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item, index }) => (
-                        <View style={{ marginTop: wp(8), flexDirection: "row" }}>
-                            <View>
-                                <Text>{item.habbitTitle}</Text>
-                                <Text>{item.habbitDescription}</Text>
-                            </View>
-                            <Text style={{ marginLeft: 10, color: Colors.Yellow }}>{item.score}</Text>
+                        <View style={{ marginTop: wp(8) }}>
+                            <Text style={{ fontSize: 16, color: "#E8C11E", marginBottom: 10 }}>{item.habbitTitle}{"  (Top 3)"}</Text>
+                            {habbitMapArray[index].map((itemm, indexx) =>
+                                <View style={{ flexDirection: "row", marginTop: 15 }}>
+                                    <Text>{itemm.fullName}</Text>
+                                    <View style={{ flex: 1, alignItems: "flex-end" }}>
+                                        <Text style={{ color: Colors.Yellow }}>{itemm.score}</Text>
+                                    </View>
+                                </View>
+                            )}
                         </View>
                     )} />
-                {/* <Text style={{ color: Colors.Yellow, marginTop: wp(7), fontWeight: "bold" }}>Reading (Top 3)</Text>
-
-                <FlatList
-                    data={P_Data}
-                    keyExtractor={(item, index) => index.toString()}
-                    renderItem={({ item, index }) => (
-                        <View style={{ marginTop: wp(8), flexDirection:"row" }}>
-                            <Text>{item.name}</Text>
-                            <Text style={{marginLeft:10, color:Colors.Yellow}}>{item.points}</Text>
-                        </View>
-                    )} /> */}
             </View>
             <Loader loading={loading} />
 

@@ -3,6 +3,8 @@ const initialState = {
     habbitName: '',
     setTarget: '',
     ChallengestartDate:'',
+    ChallengeEndDate:'',
+    ChallengeId:''
 };
 
 const HomeReducer = (state = initialState, action) => {
@@ -17,7 +19,9 @@ const HomeReducer = (state = initialState, action) => {
         case START_DATE:
             return {
                 ...state,
-                ChallengestartDate: payload.ChallengestartDate
+                ChallengestartDate: payload.ChallengestartDate,
+                ChallengeEndDate: payload.ChallengeEndDate,
+                ChallengeId: payload.ChallengeId,
             }
         default:
             return state;

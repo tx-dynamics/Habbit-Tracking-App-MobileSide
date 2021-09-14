@@ -18,6 +18,8 @@ var socket;
 const ChatScreenDepartment = (props) => {
     const [messages, setMessages] = useState('');
     const [newMessage, setNewMessage] = useState('')
+    const [pictureSelected, setpictureSelected] = useState(false)
+    const [Imagebase64, setImagebase64] = useState("")
 
     const getAllMessages = async () => {
         fetch(BaseUrl + "message/" + props.userData.department, {
@@ -26,8 +28,8 @@ const ChatScreenDepartment = (props) => {
         })
             .then((response) => response.json())
             .then((response) => {
-                // setMessages(response.reverse())
-                setMessages(response)
+                setMessages(response.reverse())
+                // setMessages(response)
             })
             .catch((err) => { console.log(err) })
     };
@@ -46,6 +48,20 @@ const ChatScreenDepartment = (props) => {
     }, [])
 
     useEffect(() => {
+        setValues()
+    }, [props.userData.profileImage])
+
+    const setValues = async() => {
+        if (props.userData.profileImage === undefined) {
+        }
+        else {
+        // alert(JSON.stringify(props.userData.profileImage))
+           await setImagebase64(props.userData.profileImage)
+            setpictureSelected(true)
+        }
+    }
+
+    useEffect(() => {
         // socket.on("message", (message) => {
         //     console.log("Recieve Message: ", message);
 
@@ -54,9 +70,9 @@ const ChatScreenDepartment = (props) => {
         // });
         let count =0;
         socket.off('message').on('message', (message) => {
-            console.log("aaaaaasssss", message);
+            // console.log("aaaaaasssss", message);
         setMessages((messages) => [...messages, message]);
-        alert(count++)
+        // alert(count++)
         }
          );
     }, []);
@@ -74,7 +90,7 @@ const ChatScreenDepartment = (props) => {
                 style={{ flex: 1 }}
                 data={messages}
                 extraData={messages}
-                // inverted
+                inverted
                 showsVerticalScrollIndicator={false}
                 keyExtractor={(item, index) => index.toString()}
                 ItemSeparatorComponent={(props) => {
@@ -83,7 +99,7 @@ const ChatScreenDepartment = (props) => {
                 renderItem={({ item, index }) => (
                     <View style={{ marginVertical: wp(5), marginHorizontal: wp(4), }}>
                         <View style={{ flexDirection: "row", flex: 1, }}>
-                            <Image source={iconPath.BLACKLOGO} style={{ width: wp(14), height: wp(14), borderRadius: wp(100) }} />
+                            <Image source={{ uri: `data:image/jpeg;base64,${item.profileImage}` }} style={{ width: wp(14), height: wp(14), borderRadius: wp(100) }} />
                             <View style={{ marginLeft: wp(3), justifyContent: "center" }}>
                                 <Text style={{ fontSize: 19 }}>{item.userName}</Text>
                                 {/* <Text style={{ color: Colors.gray, fontSize: 12 }}>{"12 hr ago"}</Text> */}
@@ -95,7 +111,9 @@ const ChatScreenDepartment = (props) => {
             <View style={[{ flex: .15, justifyContent: "center", }]}>
                 <View style={[styles.boxWithShadow, { flexDirection: "row", paddingLeft: wp(4), height: 48, alignItems: "center", paddingRight: wp(2) }]}>
                     <View style={{ flex: .12, }}>
-                        <Image source={iconPath.BLACKLOGO} style={{ width: wp(8), height: wp(8), borderRadius: wp(100) }} />
+                        {/* <Image source={iconPath.BLACKLOGO} style={{ width: wp(8), height: wp(8), borderRadius: wp(100) }} /> */}
+                        <Image source={pictureSelected ? { uri: `data:image/jpeg;base64,${Imagebase64}` } : iconPath.BLACKLOGO} style={styles.imageStyle} />
+
                     </View>
                     <View style={{ flex: .8, }}>
                         <TextInput placeholder={"Post something"}
@@ -140,5 +158,10 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         marginHorizontal: wp(3),
         borderRadius: 24
+    },
+    imageStyle: {
+        width: wp(8),
+        height: wp(8),
+        borderRadius: wp(8)
     }
 })

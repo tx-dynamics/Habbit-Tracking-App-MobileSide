@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity, ScrollView } from 'react-native'
+import {
+    View, Text, StyleSheet, Image, FlatList, TouchableOpacity, ScrollView,
+    Vibration
+} from 'react-native'
 
 import { iconPath } from '../../../Constants/icon';
 import { wp } from '../../../Helpers/Responsiveness';
@@ -10,13 +13,8 @@ import Axios from '../../../Components/Axios';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { startDateStore } from '../../../Redux/Actions/Actions'
+import { useFocusEffect } from '@react-navigation/native';
 
-const DATA = [
-    { id: "1", ChallengeName: "Morning Workout", workOutQuantity: "20 min" },
-    { id: "2", ChallengeName: "Meditation", workOutQuantity: "20 min" },
-    { id: "3", ChallengeName: "Drink Water", workOutQuantity: "4-5L" },
-    { id: "4", ChallengeName: "Reading", workOutQuantity: "20 Pages" },
-]
 
 const NewHome = (props) => {
     const [loading, setLoading] = useState(false)
@@ -34,10 +32,14 @@ const NewHome = (props) => {
     const [pictureSelected, setpictureSelected] = useState(false)
 
     useEffect(() => {
-        getTodayTasks(moment(new Date()).format('YYYY-MM-DD'))
-        // getArray()
         setValues()
-    }, [])
+    }, [props.userData.profileImage])
+
+    useFocusEffect(
+        React.useCallback(() => {
+            getTodayTasks(moment(new Date()).format('YYYY-MM-DD'))
+        }, [])
+    );
 
     const setValues = () => {
         // alert(JSON.stringify(props.userData.gender))
@@ -71,30 +73,36 @@ const NewHome = (props) => {
     }
     const ScrollDateLeft = () => {
         var startdate = moment(weekStart).subtract(1, "days").format("YYYY-MM-DD");
+        setLoading(true)
         getTodayTasks(startdate)
     }
     const ScrollDateRight = () => {
         var startdate = moment(weekEnd).add(1, "days").format("YYYY-MM-DD");
+        setLoading(true)
         getTodayTasks(startdate)
     }
     function isInArray(array, value) {
         return !!array.find(item => { return item.Date == value });
     }
     const getTodayTasks = async (date) => {
-        setLoading(true)
         let param = {};
         param["date"] = date;
         param["companyId"] = props.userData.company;
         param["userId"] = props.userId;
         await Axios("challange/date", param, 'POST').then(async (response) => {
             // alert(date+JSON.stringify(response))
-            // console.log("aaaasassaassa " + JSON.stringify(response.startDate.split('T')[0]))
+            // console.log("ndvmdmmdn" + JSON.stringify(response))
             if (response.msg === undefined) {
                 getDateDetails(response)
                 setHabbitArray(response.habbits)
                 setChallengeFound(true)
-                // response.startDate.split('T')[0]
-                props.storeStartDate({"ChallengestartDate" : response.startDate.split('T')[0] })
+                // alert(JSON.stringify(response._id))
+                let data = {}
+                data["ChallengestartDate"] = response.startDate.split('T')[0];
+                data["ChallengeEndDate"] = response.expiryDate.split('T')[0];
+                data["ChallengeId"] = response._id;
+                // alert(JSON.stringify(data))
+                props.storeStartDate(data)
             } else {
                 // setChallengeFound(false)
             }
@@ -148,19 +156,23 @@ const NewHome = (props) => {
         }
         return res;
     }
-
-    const CompleteHabbit = async (habbitId, index) => {
+    const CompleteHabbit = async (habbitId, index, item) => {
         //    alert(habbitId)
         //    await setHid(habbitId)
-
         if (onlydateRange[index] === moment(new Date()).format('YYYY-MM-DD')) {
             // alert("equal")
+            Vibration.vibrate()
             setLoading(true)
             let param = {};
             param["user"] = props.userId;
             param["habbit"] = habbitId;
             param["department"] = props.userData.department;
             param["company"] = props.userData.company;
+            if (item.special === undefined) {
+                param["special"] = "false";
+            } else {
+                param["special"] = "true";
+            }
             // alert(JSON.stringify(param))
             await Axios("challange/completeHabbit", param, 'POST').then(async (response) => {
                 setLoading(false)
@@ -169,7 +181,7 @@ const NewHome = (props) => {
                     if (err.toString().includes("Done")) {
                         await getTodayTasks(moment(new Date()).format('YYYY-MM-DD'))
                     } else {
-                        console.warn("jjj" + err)
+                        console.warn(err)
                     }
                     setLoading(false)
                 })
@@ -178,17 +190,6 @@ const NewHome = (props) => {
             // alert("not Equal")
         }
     }
-
-    const CompleteHabbithhh = (index) => {
-        // alert(index)
-        if (onlydateRange[index] === moment(new Date()).format('YYYY-MM-DD')) {
-            alert("equal")
-        } else {
-            alert("not Equal")
-        }
-        // alert(JSON.stringify(onlydateRange[index]))
-    }
-
 
     return (
         <View style={styles.container}>
@@ -214,8 +215,8 @@ const NewHome = (props) => {
                     {dateRange.map((item) =>
                         <View style={{ flexDirection: "row", marginTop: wp(5), }}>
                             <View style={{ alignItems: "center" }}>
-                                <Text style={{ fontSize: 12, color: item.Date === moment(new Date()).format('YYYY-MM-DD') ? Colors.Yellow : "#D1D1D1" }}>{item.DateDay}</Text>
-                                <Text style={{ fontSize: 12, color: item.Date === moment(new Date()).format('YYYY-MM-DD') ? Colors.Yellow : "#D1D1D1", marginTop: 5 }}>{item.DayName}</Text>
+                                <Text style={{ fontSize: moment(new Date()).format('YYYY-MM-DD') ? 14 : 12, color: item.Date === moment(new Date()).format('YYYY-MM-DD') ? Colors.Yellow : "#D1D1D1" }}>{item.DateDay}</Text>
+                                <Text style={{ fontSize: moment(new Date()).format('YYYY-MM-DD') ? 14 : 12, color: item.Date === moment(new Date()).format('YYYY-MM-DD') ? Colors.Yellow : "#D1D1D1", marginTop: 5 }}>{item.DayName}</Text>
                             </View>
                         </View>
                     )}
@@ -233,21 +234,22 @@ const NewHome = (props) => {
                     showsVerticalScrollIndicator={false}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item, index }) => (
-                        <View style={{ backgroundColor: "#A2A9AC", borderRadius: 12, paddingHorizontal: wp(5), marginTop: wp(3), paddingVertical: wp(5) }}>
+                        <View style={{ backgroundColor: "#D3D3D3", borderRadius: 12, paddingHorizontal: wp(5), marginTop: wp(3), paddingVertical: wp(5) }}>
                             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                                 <Text style={{ color: "#FFFFFF", fontSize: 17 }}>{item.habbitTitle}</Text>
-                                <Text style={{ color: "#FFFFFF", fontSize: 13 }}>{"20 min"}</Text>
+                                <View style={{ width: wp(20) }}>
+                                    <Text style={{ color: "#FFFFFF", fontSize: 13, alignSelf: "flex-end" }}>{item.habbitDescription}</Text>
+                                </View>
                             </View>
                             <ScrollView horizontal style={{}} contentContainerStyle={{ flex: 1, justifyContent: "space-between" }}>
                                 {item.dates.map((itemm, indexx) =>
                                     <View style={{ flexDirection: "row", marginTop: wp(4), justifyContent: "space-between", paddingHorizontal: wp(3) }}>
-                                        <Fonticon type={"MaterialCommunityIcons"} name={itemm.weekDay === "notDone" ? "circle-outline" : "circle"} size={18} color={Colors.Yellow}
-                                            onPress={() => CompleteHabbit(item._id, indexx)} />
+                                        <Fonticon type={"MaterialCommunityIcons"} name={itemm.weekDay === "notDone" ? "circle-outline" : "circle"} size={itemm.weekDay === "notDone" ? 18 : 21} color={Colors.Yellow}
+                                            onPress={() => CompleteHabbit(item._id, indexx, item)} />
                                         {/* <Text>{onlydateRange[0]}</Text> */}
                                     </View>
                                 )}
                             </ScrollView>
-
                         </View>
                     )} />
 

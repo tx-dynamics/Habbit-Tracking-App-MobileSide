@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useFocusEffect } from '@react-navigation/native';
 import { View, Text, StyleSheet, FlatList, ScrollView } from 'react-native'
 import { Colors } from '../../../Constants/Colors';
 import { wp } from '../../../Helpers/Responsiveness';
@@ -14,12 +15,19 @@ const ALL = (props) => {
     const [POD, setPOD] = useState('');
     const [loading, setLoading] = useState(false)
 
-    useEffect(() => {
-        getTodayTasks()
-    }, [])
+    // useEffect(() => {
+    //     getTodayTasks()
+    // }, [])
+
+    useFocusEffect(
+        React.useCallback(() => {
+            getTodayTasks()
+        }, [])
+      );
+      
 
     const getTodayTasks = async () => {
-        setLoading(true)
+        // setLoading(true)
         let param = {};
         // alert(JSON.stringify(props.userData))
         param["companyId"] = props.userData.company;
@@ -31,11 +39,11 @@ const ALL = (props) => {
             } else {
                 alert(JSON.stringify(response.error))
             }
-            setLoading(false)
+            // setLoading(false)
         })
             .catch((err) => {
                 console.warn(err)
-                setLoading(false)
+                // setLoading(false)
             })
     }
 
@@ -51,8 +59,8 @@ const ALL = (props) => {
                 <FlatList
                     data={POD}
                     extraData={POD}
-                    onRefresh={() => getTodayTasks()}
-                    refreshing={loading}
+                    // onRefresh={() => getTodayTasks()}
+                    // refreshing={loading}
                     contentContainerStyle={{ paddingBottom: wp(20) }}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item, index }) => (

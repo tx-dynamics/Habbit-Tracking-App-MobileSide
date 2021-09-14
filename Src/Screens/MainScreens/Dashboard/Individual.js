@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useFocusEffect } from '@react-navigation/native';
 import { View, Text, StyleSheet, FlatList } from 'react-native'
 import { Colors } from '../../../Constants/Colors';
 import { wp } from '../../../Helpers/Responsiveness';
@@ -12,12 +13,15 @@ const Individual = (props) => {
     const [individual, setIndividual] = useState('');
     const [loading, setLoading] = useState(false)
 
-    useEffect(() => {
-        getTodayTasks()
-    }, [])
+
+    useFocusEffect(
+        React.useCallback(() => {
+            getTodayTasks()
+        }, [])
+    );
 
     const getTodayTasks = async () => {
-        setLoading(true)
+        // setLoading(true)
         let param = {};
         param["companyId"] = props.userData.company;
         param["startDate"] = props.ChallengestartDate;
@@ -27,11 +31,11 @@ const Individual = (props) => {
             } else {
                 alert(JSON.stringify(response.error))
             }
-            setLoading(false)
+            // setLoading(false)
         })
             .catch((err) => {
                 console.warn(err)
-                setLoading(false)
+                // setLoading(false)
             })
     }
     return (
@@ -48,14 +52,16 @@ const Individual = (props) => {
                     contentContainerStyle={{ paddingBottom: wp(20) }}
                     data={individual}
                     extraData={individual}
-                    onRefresh={() => getTodayTasks()}
-                    refreshing={loading}
+                    // onRefresh={() => getTodayTasks()}
+                    // refreshing={loading}
                     showsVerticalScrollIndicator={false}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item, index }) => (
                         <View style={{ marginTop: wp(8), flexDirection: "row" }}>
-                            <Text style={{ width: wp(20) }}>{item.fullName}</Text>
-                            <Text style={{ marginLeft: 10, color: Colors.Yellow }}>{item.score}</Text>
+                            <Text style={{  }}>{item.fullName}</Text>
+                            <View style={{flex:1, alignItems:"flex-end"}}>
+                                <Text style={{ marginLeft: 10, color: Colors.Yellow }}>{item.score}</Text>
+                            </View>
                         </View>
                     )} />
             </View>
