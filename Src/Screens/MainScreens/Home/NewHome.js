@@ -202,7 +202,6 @@ const NewHome = (props) => {
                     style={{ paddingRight: wp(3), alignItems: "flex-end" }}>
                     {/* <Image source={iconPath.BLACKLOGO} style={styles.imageStyle} /> */}
                     <Image source={pictureSelected ? { uri: `data:image/jpeg;base64,${Imagebase64}` } : iconPath.BLACKLOGO} style={styles.imageStyle} />
-
                 </TouchableOpacity>
             </View>
             {/* {challengeFound ?
