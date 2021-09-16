@@ -22,7 +22,7 @@ const ChatTopBar = () => {
             activeTintColor: Colors.Yellow,
             inactiveTintColor: "#bbb",
             labelStyle: {
-                fontSize: 12,
+                fontSize: 11.5,
                 fontWeight: "bold"
             },
             indicatorStyle: {

@@ -16,6 +16,7 @@ import { iconPath } from '../../../Constants/icon'
 import Fonticon from '../../../Constants/FontIcon';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Image_Picker from '../../../Components/Image_Picker';
+import Loader from '../../../Components/Loader';
 
 const ENDPOINT = "https://mindful-leader-athlete.herokuapp.com";
 var socket;
@@ -28,8 +29,11 @@ const ChatScreenCompany = (props) => {
     const [ImageModelShow, setImageModelShow] = useState(false)
     const [base64ImageFull, setBase64ImageFull] = useState('')
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+    const [loading, setLoading] = useState(false)
 
     const getAllMessages = async () => {
+        setLoading(true)
+
         fetch(BaseUrl + "message/" + props.userData.company, {
             method: 'GET',
             headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
@@ -38,8 +42,14 @@ const ChatScreenCompany = (props) => {
             .then((response) => {
                 // console.log("hdhjhdshsd" + JSON.stringify(response))
                 setMessages(response.reverse())
+                setLoading(false)
+
             })
-            .catch((err) => { console.log(err) })
+            .catch((err) => {
+                 console.log(err) 
+                setLoading(false)
+
+                })
     };
 
     useEffect(() => {
@@ -213,6 +223,7 @@ const ChatScreenCompany = (props) => {
                     </Pressable>
                 </View>
             </Modal>
+            <Loader loading={loading} />
 
         </KeyboardAwareScrollView >
 

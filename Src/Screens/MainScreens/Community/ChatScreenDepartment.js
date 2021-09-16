@@ -15,6 +15,7 @@ import { Colors } from '../../../Constants/Colors';
 import { iconPath } from '../../../Constants/icon'
 import Fonticon from '../../../Constants/FontIcon';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import Loader from '../../../Components/Loader';
 
 
 const ENDPOINT = "https://mindful-leader-athlete.herokuapp.com";
@@ -27,8 +28,11 @@ const ChatScreenDepartment = (props) => {
     const [Imagebase64, setImagebase64] = useState("")
     const [ImageModelShow, setImageModelShow] = useState(false)
     const [base64ImageFull, setBase64ImageFull] = useState('')
+    const [loading, setLoading] = useState(false)
 
     const getAllMessages = async () => {
+        setLoading(true)
+
         fetch(BaseUrl + "message/" + props.userData.department, {
             method: 'GET',
             headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
@@ -36,8 +40,14 @@ const ChatScreenDepartment = (props) => {
             .then((response) => response.json())
             .then((response) => {
                 setMessages(response.reverse())
+                setLoading(false)
+
             })
-            .catch((err) => { console.log(err) })
+            .catch((err) => {
+                console.log(err)
+                setLoading(false)
+
+            })
     };
 
     useEffect(() => {
@@ -57,12 +67,12 @@ const ChatScreenDepartment = (props) => {
         setValues()
     }, [props.userData.profileImage])
 
-    const setValues = async() => {
+    const setValues = async () => {
         if (props.userData.profileImage === undefined) {
         }
         else {
-        // alert(JSON.stringify(props.userData.profileImage))
-           await setImagebase64(props.userData.profileImage)
+            // alert(JSON.stringify(props.userData.profileImage))
+            await setImagebase64(props.userData.profileImage)
             setpictureSelected(true)
         }
     }
@@ -74,13 +84,13 @@ const ChatScreenDepartment = (props) => {
         //     setMessages((messages) => [...messages, message]);
 
         // });
-        let count =0;
+        let count = 0;
         socket.off('message').on('message', (message) => {
             // console.log("aaaaaasssss", message);
-        setMessages((messages) => [...messages, message]);
-        // alert(count++)
+            setMessages((messages) => [...messages, message]);
+            // alert(count++)
         }
-         );
+        );
     }, []);
 
     const openCamera = async (type) => {
@@ -122,85 +132,86 @@ const ChatScreenDepartment = (props) => {
     return (
 
         <KeyboardAwareScrollView style={styles.container}
-        contentContainerStyle={{ flex: 1 }}
-    // behavior={Platform.OS === "ios" ? "padding" : null}
-    >
-        <View style={{ flex: .88 }}>
-            <FlatList
-                style={{ flex: 1, }}
-                data={messages}
-                extraData={messages}
-                inverted
-                showsVerticalScrollIndicator={false}
-                // contentContainerStyle={{marginTop:wp(20)}}
-                keyExtractor={(item, index) => index.toString()}
-                ItemSeparatorComponent={(props) => {
-                    return (<View style={{ height: 1, backgroundColor: '#CDCDCD' }} />);
-                }}
-                renderItem={({ item, index }) => (
-                    <View style={{ marginVertical: wp(5), marginHorizontal: wp(4), }}>
-                        <View style={{ flexDirection: "row", flex: 1, }}>
-                            <Image source={{ uri: `data:image/jpeg;base64,${item.profileImage}` }} style={{ width: wp(14), height: wp(14), borderRadius: wp(100) }} />
-                            <View style={{ marginLeft: wp(3), justifyContent: "center" }}>
-                                <Text style={{ fontSize: 19 }}>{item.userName}</Text>
-                                {/* <Text style={{ color: Colors.gray, fontSize: 12 }}>{"12 hr ago"}</Text> */}
+            contentContainerStyle={{ flex: 1 }}
+        // behavior={Platform.OS === "ios" ? "padding" : null}
+        >
+            <View style={{ flex: .88 }}>
+                <FlatList
+                    style={{ flex: 1, }}
+                    data={messages}
+                    extraData={messages}
+                    inverted
+                    showsVerticalScrollIndicator={false}
+                    // contentContainerStyle={{marginTop:wp(20)}}
+                    keyExtractor={(item, index) => index.toString()}
+                    ItemSeparatorComponent={(props) => {
+                        return (<View style={{ height: 1, backgroundColor: '#CDCDCD' }} />);
+                    }}
+                    renderItem={({ item, index }) => (
+                        <View style={{ marginVertical: wp(5), marginHorizontal: wp(4), }}>
+                            <View style={{ flexDirection: "row", flex: 1, }}>
+                                <Image source={{ uri: `data:image/jpeg;base64,${item.profileImage}` }} style={{ width: wp(14), height: wp(14), borderRadius: wp(100) }} />
+                                <View style={{ marginLeft: wp(3), justifyContent: "center" }}>
+                                    <Text style={{ fontSize: 19 }}>{item.userName}</Text>
+                                    {/* <Text style={{ color: Colors.gray, fontSize: 12 }}>{"12 hr ago"}</Text> */}
+                                </View>
                             </View>
+                            {item.type === "photo" ?
+                                <Pressable onPress={() => fullImage(item.text)}>
+                                    <Image source={{ uri: `data:image/jpeg;base64,${item.text}` }} style={{ width: wp(28), height: wp(50), borderRadius: wp(4), resizeMode: "contain" }} />
+                                </Pressable>
+                                :
+                                <Text style={{ marginTop: 10, marginLeft: 5 }}>{item.text}</Text>
+                            }
                         </View>
-                        {item.type === "photo" ?
-                            <Pressable onPress={() => fullImage(item.text)}>
-                                <Image source={{ uri: `data:image/jpeg;base64,${item.text}` }} style={{ width: wp(28), height: wp(50), borderRadius: wp(4), resizeMode: "contain" }} />
-                            </Pressable>
-                            :
-                            <Text style={{ marginTop: 10, marginLeft: 5 }}>{item.text}</Text>
-                        }
+                    )} />
+
+
+            </View>
+            <View style={{ flex: .12 }}>
+                <View style={[{ justifyContent: "center" }]}>
+                    <View style={[styles.boxWithShadow, { flexDirection: "row", paddingLeft: wp(4), height: 48, alignItems: "center", paddingRight: wp(2) }]}>
+                        <Pressable style={{ flex: .12, }}
+                            onPress={() => openCamera("gallery")}>
+                            <Image source={pictureSelected ? { uri: `data:image/jpeg;base64,${Imagebase64}` } : iconPath.BLACKLOGO} style={styles.imageStyle} />
+                        </Pressable>
+                        <View style={{ flex: .8, }}>
+                            <TextInput placeholder={"Post something"}
+                                placeholderTextColor={Colors.Yellow}
+                                value={newMessage}
+                                onChangeText={(newMessage) => setNewMessage(newMessage)} />
+                        </View>
+
+                        <Fonticon type={"MaterialIcons"} name={"send"} size={wp(8)} color={Colors.Yellow}
+                            style={{ flex: .12 }}
+                            onPress={() => onSend()}
+                        />
                     </View>
-                )} />
-
-
-        </View>
-        <View style={{ flex: .12 }}>
-            <View style={[{ justifyContent: "center" }]}>
-                <View style={[styles.boxWithShadow, { flexDirection: "row", paddingLeft: wp(4), height: 48, alignItems: "center", paddingRight: wp(2) }]}>
-                    <Pressable style={{ flex: .12, }}
-                        onPress={() => openCamera("gallery")}>
-                        <Image source={pictureSelected ? { uri: `data:image/jpeg;base64,${Imagebase64}` } : iconPath.BLACKLOGO} style={styles.imageStyle} />
-                    </Pressable>
-                    <View style={{ flex: .8, }}>
-                        <TextInput placeholder={"Post something"}
-                            placeholderTextColor={Colors.Yellow}
-                            value={newMessage}
-                            onChangeText={(newMessage) => setNewMessage(newMessage)} />
-                    </View>
-
-                    <Fonticon type={"MaterialIcons"} name={"send"} size={wp(8)} color={Colors.Yellow}
-                        style={{ flex: .12 }}
-                        onPress={() => onSend()}
-                    />
                 </View>
+
             </View>
 
-        </View>
+            <Modal
+                transparent={true}
+                animationType={'none'}
+                // visible={true}
+                visible={ImageModelShow}
+                onRequestClose={() => { setImageModelShow(false) }}>
+                <View style={{ flex: 1, backgroundColor: "white" }}>
+                    <Image source={{ uri: `data:image/jpeg;base64,${base64ImageFull}` }} style={{ width: "100%", height: "100%", resizeMode: "contain" }} />
+                    <Pressable onPress={() => setImageModelShow(false)}
+                        style={{ position: "absolute", top: 10, right: 10 }}>
+                        <Fonticon type={"Entypo"} name={"circle-with-cross"} size={wp(8)} color={Colors.Yellow}
+                            style={{ flex: .12 }}
+                        />
+                    </Pressable>
+                </View>
+            </Modal>
+            <Loader loading={loading} />
 
-        <Modal
-            transparent={true}
-            animationType={'none'}
-            // visible={true}
-            visible={ImageModelShow}
-            onRequestClose={() => { setImageModelShow(false) }}>
-            <View style={{ flex: 1, backgroundColor: "white" }}>
-                <Image source={{ uri: `data:image/jpeg;base64,${base64ImageFull}` }} style={{ width: "100%", height: "100%", resizeMode:"contain" }} />
-                <Pressable onPress={() => setImageModelShow(false)}
-                    style={{ position: "absolute", top: 10, right: 10 }}>
-                    <Fonticon type={"Entypo"} name={"circle-with-cross"} size={wp(8)} color={Colors.Yellow}
-                        style={{ flex: .12 }}
-                    />
-                </Pressable>
-            </View>
-        </Modal>
+        </KeyboardAwareScrollView >
 
-    </KeyboardAwareScrollView >
-
-   );
+    );
 };
 
 const mapStateToProps = (state) => {

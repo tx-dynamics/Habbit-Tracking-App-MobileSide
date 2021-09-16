@@ -41,7 +41,7 @@ const Habits = ({ navigation, ...props }) => {
     );
 
     const getTodayTasks = async () => {
-        // setLoading(true)
+        setLoading(true)
         let param = {};
         param["companyId"] = props.userData.company;
         param["startDate"] = props.ChallengestartDate;
@@ -66,11 +66,11 @@ const Habits = ({ navigation, ...props }) => {
             } else {
                 alert(JSON.stringify(response.error))
             }
-            // setLoading(false)
+            setLoading(false)
         })
             .catch((err) => {
                 console.warn(err)
-                // setLoading(false)
+                setLoading(false)
             })
     }
 

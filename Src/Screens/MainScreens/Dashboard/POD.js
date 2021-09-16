@@ -22,7 +22,7 @@ const POD = (props) => {
       );
 
     const getTodayTasks = async () => {
-        // setLoading(true)
+        setLoading(true)
         // alert(props.ChallengestartDate)
         let param = {};
         param["companyId"] = props.userData.company;
@@ -35,11 +35,11 @@ const POD = (props) => {
             } else {
                 alert(JSON.stringify(response.error))
             }
-            // setLoading(false)
+            setLoading(false)
         })
             .catch((err) => {
                 console.warn(err)
-                // setLoading(false)
+                setLoading(false)
             })
     }
     return (
