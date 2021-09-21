@@ -55,30 +55,7 @@ const EditProfile = (props) => {
         }
         setFullName(props.userData.fullName)
     }
-    const getUser = () => {
-        // https://mindful-leader-athlete.herokuapp.com/api/user/6113d0fe704e961da474cae7/
-        fetch("https://mindful-leader-athlete.herokuapp.com/api/user/" + props.userId, {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            },
-        })
-            .then((response) => response.json())
-            .then((response) => {
-                alert(JSON.stringify(response))
-                // let data = {}
-                // data["userId"] = response._id;
-                // data["userData"] = response;
-                // data["isLogin"] = true;
-                // props.SessionMaintain(data)
-                setLoading(false)
-            })
-            .catch((err) => {
-                console.log(err)
-                setLoading(false)
-            })
-    }
+
     const openCamera = async (type) => {
         const res = await Image_Picker(type);
         console.log("cameraaeResss\n", res.path);
@@ -86,7 +63,7 @@ const EditProfile = (props) => {
             return;
         }
         setpictureSelected(true)
-        await setImagebase64(res.data)
+        setImagebase64(res.data)
         // console.log("aaaaassssssdddd  "+JSON.stringify(res))
         setPicture(res.path)
         ChangeImage(res.data)
@@ -97,7 +74,7 @@ const EditProfile = (props) => {
         setLoading(true)
         let param = {};
         param["profileImage"] = img;
-        console.log("hhhhhhh " + JSON.stringify(param))
+        // console.log("hhhhhhh " + JSON.stringify(param))
         fetch("https://mindful-leader-athlete.herokuapp.com/api/user/editProfileImage/" + props.userId, {
             method: 'PUT',
             headers: {
@@ -107,24 +84,26 @@ const EditProfile = (props) => {
             body: JSON.stringify(param)
         })
             .then((response) => response.json())
-            .then(async (response) => {
+            .then( (response) => {
                 // alert(JSON.stringify(response))
-                let data = {}
-                data["userId"] = response._id;
-                data["userData"] = response;
-                data["isLogin"] = true;
-                await props.SessionMaintain(data)
                 setLoading(false)
+                setData(response)
             })
             .catch((err) => {
                 console.log(err)
                 setLoading(false)
             })
-
-
-
-
     }
+
+    const setData = async(res) => {
+        let param = {}
+        param["userId"] = res._id;
+        param["userData"] = res;
+        param["isLogin"] = true;
+        await setLoading(false)
+         props.SessionMaintain(param)
+    }
+
     const ChangeGender = async () => {
         // alert(JSON.stringify(props.userData))
         if (!GenderEdit) {

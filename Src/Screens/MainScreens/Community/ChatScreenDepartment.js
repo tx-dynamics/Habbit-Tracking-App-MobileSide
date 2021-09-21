@@ -87,7 +87,9 @@ const ChatScreenDepartment = (props) => {
         let count = 0;
         socket.off('message').on('message', (message) => {
             // console.log("aaaaaasssss", message);
-            setMessages((messages) => [...messages, message]);
+            // setMessages((messages) => [...messages, message]);
+            setMessages((messages) => [message, ...messages]);
+
             // alert(count++)
         }
         );
@@ -133,6 +135,7 @@ const ChatScreenDepartment = (props) => {
 
         <KeyboardAwareScrollView style={styles.container}
             contentContainerStyle={{ flex: 1 }}
+            keyboardShouldPersistTaps={'handled'}
         // behavior={Platform.OS === "ios" ? "padding" : null}
         >
             <View style={{ flex: .88 }}>

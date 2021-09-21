@@ -127,7 +127,9 @@ const SignUp = (props) => {
                     {confirmPasswordError &&
                         <Text style={{ fontSize: 12, color: "red" }}>{"Password Not same"}</Text>
                     }
-                    <Text style={{ alignSelf: "flex-end", marginTop: wp(1) }}>Forgot Password?</Text>
+                    <Pressable onPress={() => props.navigation.navigate("ForgotPassword")}>
+                        <Text style={{ alignSelf: "flex-end", marginTop: wp(1) }}>Forgot Password?</Text>
+                    </Pressable>
                     {apiError &&
                         <Text style={{ fontSize: 12, color: "red", textAlign: "center" }}>{apiErrorMsg}</Text>
                     }

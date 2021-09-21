@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { View, Text, StyleSheet, Image, Pressable } from 'react-native'
+import { View, Text, StyleSheet, Image } from 'react-native'
 
 import { Colors } from '../../Constants/Colors';
 import { iconPath } from '../../Constants/icon';
@@ -12,8 +12,9 @@ import Axios from '../../Components/Axios';
 import { connect } from 'react-redux';
 import { SetSession } from '../../Redux/Actions/Actions';
 import { ScrollView } from 'react-native-gesture-handler';
+import NewAlert from '../../Components/NewAlert';
 
-const Login = (props) => {
+const ForgotPassword = (props) => {
     const [secureTextEntry, setSecureTextEntry] = useState(true)
     const [email, setEmail] = useState('')
     const [emailError, setEmailError] = useState(false)
@@ -23,43 +24,39 @@ const Login = (props) => {
     const [apiError, setapiError] = useState(false)
     const [apiErrorMsg, setapiErrorMsg] = useState('')
     const [loading, setLoading] = useState(false)
+    const [showAlert, setShowAlert] = useState(false)
+    const [alertText, setalertText] = useState('')
 
-    const LoginUser = async () => {
-        setEmailError(false)
-        setInvalidemailError(false)
-        setPasswordError(false)
-        setapiError(false)
-        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-        if (email === '')
-            setEmailError(true)
-        else if (reg.test(email) === false)
-            setInvalidemailError(true)
-        else if (password === '')
-            setPasswordError(true)
-        else {
-            setLoading(true)
-            let param = {};
-            param["email"] = email;
-            param["password"] = password;
-            await Axios("user/login", param, 'POST').then(async (response) => {
-                // alert(JSON.stringify(response))
-                if (response.error === undefined) {
-                    let data = {}
-                    data["userId"] = response._id;
-                    data["userData"] = response;
-                    data["isLogin"] = true;
-                    props.SessionMaintain(data)
-                } else {
-                    setapiError(true)
-                    setapiErrorMsg(response.error)
-                }
+    const forgotPassword = async () => {
+
+        let param = {};
+        param["email"] = email;
+        setLoading(true)
+// 
+        await Axios("user/forgotPassword", param, 'POST').then(async (response) => {
+            // alert(JSON.stringify(response))
+            // if (response.error === undefined) {
+            //     let data = {}
+            //     data["userId"] = response._id;
+            //     data["userData"] = response;
+            //     data["isLogin"] = true;
+            //     props.SessionMaintain(data)
+            // } else {
+            //     setapiError(true)
+            //     setapiErrorMsg(response.error)
+            // }
+            setalertText("Email containing your new password has been sent")
+            setShowAlert(true)
+            setLoading(false)
+        })
+            .catch((err) => {
+                // console.warn(err)
+                setalertText("Email containing your new password has been sent")
+                setShowAlert(true)
+                setEmail('')
                 setLoading(false)
             })
-                .catch((err) => {
-                    console.warn(err)
-                    setLoading(false)
-                })
-        }
+
     }
 
     return (
@@ -68,10 +65,7 @@ const Login = (props) => {
 
                 <View style={{ flex: .6, marginHorizontal: wp(5) }}>
                     <Image source={iconPath.BLACKLOGO} style={styles.LogoStyle} />
-                    <View style={styles.titleView}>
-                        <Text style={styles.WelcomeStyle}>Welcome back!</Text>
-                        <Text>Enter email & password to continue</Text>
-                    </View>
+                
                 </View>
                 <View style={{ flex: 1, marginHorizontal: wp(5) }}>
                     <InputField placeholder={"Email"} keyboardType="email-address"
@@ -83,30 +77,21 @@ const Login = (props) => {
                     {InvalidemailError &&
                         <Text style={{ fontSize: 12, color: "red" }}>{"Invalid Email Address"}</Text>
                     }
-                    <InputField placeholder={"Password"}
-                        secureText
-                        secureTextEntry={secureTextEntry}
-                        onPress={() => setSecureTextEntry(!secureTextEntry)}
-                        value={password}
-                        onChangeText={password => setPassword(password)}
-                    />
-                    {passwordError &&
-                        <Text style={{ fontSize: 12, color: "red" }}>{"Please Enter Password"}</Text>
-                    }
-                    <Pressable onPress={() => props.navigation.navigate("ForgotPassword")}>
-                        <Text style={{ alignSelf: "flex-end", marginTop: wp(1) }}>Forgot Password?</Text>
-                    </Pressable>
+                  
                     {apiError &&
                         <Text style={{ fontSize: 12, color: "red", textAlign: "center" }}>{apiErrorMsg}</Text>
                     }
-                    <Button title={"Log In"} style={{ marginTop: wp(9) }}
-                        onPress={() => LoginUser()} />
-                    <Text onPress={() => props.navigation.navigate("SignUp")} style={{ alignSelf: "center", marginTop: wp(5) }}>New here? Sign Up</Text>
+                    <Button title={"Submit"} style={{ marginTop: wp(9) }}
+                        onPress={() => forgotPassword()} 
+                        />
                 </View>
             </ScrollView>
 
             <Loader loading={loading} />
 
+            <NewAlert show={showAlert}
+                text={alertText}
+                onPressOk={() => setShowAlert(false)} />
         </View>
     )
 }
@@ -115,7 +100,7 @@ const mapDispatchToProps = (dispatch) => {
         SessionMaintain: (data) => dispatch(SetSession(data))
     }
 }
-export default connect(null, mapDispatchToProps)(Login);
+export default connect(null, mapDispatchToProps)(ForgotPassword);
 const styles = StyleSheet.create({
     container: {
         flex: 1,

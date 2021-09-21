@@ -8,6 +8,7 @@ import InputField from '../../../Components/InputField';
 import Axios from '../../../Components/Axios';
 import { connect } from 'react-redux';
 import Loader from '../../../Components/Loader';
+import NewAlert from '../../../Components/NewAlert';
 
 
 const AddHabit = (props) => {
@@ -15,6 +16,8 @@ const AddHabit = (props) => {
     const [HabitName, setHabitName] = useState('');
     const [target, setTarget] = useState('');
     const [loading, setLoading] = useState(false)
+    const [showAlert, setShowAlert] = useState(false)
+    const [alertText, setalertText] = useState('')
 
 
     const AddHabitToday = async () => {
@@ -43,7 +46,9 @@ const AddHabit = (props) => {
                 // // } else {
                 // //     alert(JSON.stringify(response.error))
                 // // }
-                alert("Habit added successfully")
+                setalertText("Habit added successfully")
+                setShowAlert(true)
+                // alert("Habit added successfully")
                 setHabitName("")
                 setTarget("")
                 setLoading(false)
@@ -70,6 +75,9 @@ const AddHabit = (props) => {
                     onChangeText={(target) => setTarget(target)} />
             </View>
             <Loader loading={loading} />
+            <NewAlert show={showAlert}
+                text={alertText}
+                onPressOk={() => setShowAlert(false)} />
         </View>
     )
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     View, Text, FlatList, StyleSheet, Image, TextInput, Platform,
     KeyboardAvoidingView, ScrollView, Keyboard, Pressable, Modal
@@ -30,6 +30,13 @@ const ChatScreenCompany = (props) => {
     const [base64ImageFull, setBase64ImageFull] = useState('')
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
     const [loading, setLoading] = useState(false)
+    const [keyboardOffset, setKeyboardOffset] = useState(0);
+
+
+    const onKeyboardShow = event => setKeyboardOffset(event.endCoordinates.height);
+    const onKeyboardHide = () => setKeyboardOffset(0);
+    const keyboardDidShowListener = useRef();
+    const keyboardDidHideListener = useRef();
 
     const getAllMessages = async () => {
         setLoading(true)
@@ -46,10 +53,10 @@ const ChatScreenCompany = (props) => {
 
             })
             .catch((err) => {
-                 console.log(err) 
+                console.log(err)
                 setLoading(false)
 
-                })
+            })
     };
 
     useEffect(() => {
@@ -88,25 +95,15 @@ const ChatScreenCompany = (props) => {
         }
     }, []);
 
-    // useEffect(() => {
-    //     const keyboardDidShowListener = Keyboard.addListener(
-    //       'keyboardDidShow',
-    //       () => {
-    //         setKeyboardVisible(true); // or some other action
-    //       }
-    //     );
-    //     const keyboardDidHideListener = Keyboard.addListener(
-    //       'keyboardDidHide',
-    //       () => {
-    //         setKeyboardVisible(false); // or some other action
-    //       }
-    //     );
+    useEffect(() => {
+        keyboardDidShowListener.current = Keyboard.addListener('keyboardWillShow', onKeyboardShow);
+        keyboardDidHideListener.current = Keyboard.addListener('keyboardWillHide', onKeyboardHide);
 
-    //     return () => {
-    //       keyboardDidHideListener.remove();
-    //       keyboardDidShowListener.remove();
-    //     };
-    //   }, []);
+        return () => {
+            keyboardDidShowListener.current.remove();
+            keyboardDidHideListener.current.remove();
+        };
+    }, []);
 
 
     const openCamera = async (type) => {
@@ -149,6 +146,7 @@ const ChatScreenCompany = (props) => {
     return (
         <KeyboardAwareScrollView style={styles.container}
             contentContainerStyle={{ flex: 1 }}
+            keyboardShouldPersistTaps={'handled'}
         // behavior={Platform.OS === "ios" ? "padding" : null}
         >
             <View style={{ flex: .88 }}>
@@ -214,7 +212,7 @@ const ChatScreenCompany = (props) => {
                 visible={ImageModelShow}
                 onRequestClose={() => { setImageModelShow(false) }}>
                 <View style={{ flex: 1, backgroundColor: "white" }}>
-                    <Image source={{ uri: `data:image/jpeg;base64,${base64ImageFull}` }} style={{ width: "100%", height: "100%", resizeMode:"contain" }} />
+                    <Image source={{ uri: `data:image/jpeg;base64,${base64ImageFull}` }} style={{ width: "100%", height: "100%", resizeMode: "contain" }} />
                     <Pressable onPress={() => setImageModelShow(false)}
                         style={{ position: "absolute", top: 10, right: 10 }}>
                         <Fonticon type={"Entypo"} name={"circle-with-cross"} size={wp(8)} color={Colors.Yellow}

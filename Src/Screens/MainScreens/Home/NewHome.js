@@ -38,8 +38,11 @@ const NewHome = (props) => {
     const [pictureSelected, setpictureSelected] = useState(false)
 
     useEffect(() => {
-        setValues()
         setLoading(true)
+        // getPreviousTasks(moment(new Date()).format('YYYY-MM-DD'))
+    }, [])
+    useEffect(() => {
+        setValues()
         // getPreviousTasks(moment(new Date()).format('YYYY-MM-DD'))
     }, [props.userData.profileImage])
 
@@ -334,8 +337,9 @@ const NewHome = (props) => {
                                     <ScrollView horizontal style={{}} contentContainerStyle={{ flex: 1, justifyContent: "space-between" }}>
                                         {item.dates.map((itemm, indexx) =>
                                             <View style={{ flexDirection: "row", marginTop: wp(4), justifyContent: "space-between", paddingHorizontal: wp(3) }}>
-                                                <Fonticon type={"MaterialCommunityIcons"} name={itemm.weekDay === "notDone" ? "circle-outline" : "circle"} size={itemm.weekDay === "notDone" ? 18 : 21} color={Colors.Yellow}
-                                                    onPress={() => CompleteHabbit(item._id, indexx, item)} />
+                                                <Fonticon type={"MaterialCommunityIcons"} name={itemm.weekDay === "notDone" ? "circle-outline" : "circle"} size={itemm.weekDay === "notDone" ? 18 : 25} color={Colors.Yellow}
+                                                    onPress={() => CompleteHabbit(item._id, indexx, item)} 
+                                                    style={{marginTop:itemm.weekDay === "notDone" ? 0 : -2}}/>
                                                 {/* <Text>{onlydateRange[0]}</Text> */}
                                             </View>
                                         )}
@@ -351,10 +355,12 @@ const NewHome = (props) => {
                 </View>
 
             }
-            <View style={{ flex: .09, justifyContent: "center", alignItems: "flex-end", marginRight: 5 }}>
-                <Fonticon type={"AntDesign"} name={"pluscircle"} size={wp(15)} color={Colors.Yellow}
-                    onPress={() => props.navigation.navigate("AddHabit")} />
-            </View>
+            {challengeFound &&
+                <View style={{ flex: .09, justifyContent: "center", alignItems: "flex-end", marginRight: 5 }}>
+                    <Fonticon type={"AntDesign"} name={"pluscircle"} size={wp(15)} color={Colors.Yellow}
+                        onPress={() => props.navigation.navigate("AddHabit")} />
+                </View>
+            }
             <Loader loading={loading} />
 
         </View>

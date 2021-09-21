@@ -6,6 +6,7 @@ import Login from '../../Screens/Auth/Login';
 import SignUp from '../../Screens/Auth/SignUp';
 import LastStep from '../../Screens/Auth/LastStep';
 import StartScreen from '../../Screens/Auth/StartScreen';
+import ForgotPassword from '../../Screens/Auth/ForgotPassword';
 const Stack = createStackNavigator();
 
 function AuthStack(props) {
@@ -16,6 +17,7 @@ function AuthStack(props) {
                 <Stack.Screen name="Login" component={Login} />
                 <Stack.Screen name="SignUp" component={SignUp} />
                 <Stack.Screen name="LastStep" component={LastStep} />
+                <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
                 <Stack.Screen name="StartScreen" component={StartScreen} />
             </Stack.Navigator>
         </>
