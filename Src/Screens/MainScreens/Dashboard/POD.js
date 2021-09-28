@@ -22,7 +22,7 @@ const POD = (props) => {
       );
 
     const getTodayTasks = async () => {
-        setLoading(true)
+        // setLoading(true)
         // alert(props.ChallengestartDate)
         let param = {};
         param["companyId"] = props.userData.company;
@@ -61,8 +61,11 @@ const POD = (props) => {
                     renderItem={({ item, index }) => (
                         <View style={{ marginTop: wp(8), flexDirection: "row" }}>
                             <Text style={{width:wp(30)}}>{item.fullName}</Text>
-                            <View style={{ backgroundColor: Colors.Yellow, height: 4, borderRadius: 30, marginLeft: 5, marginRight: 5, flex: item.score / 10, alignSelf: "center" }} />
-                            <Text style={{ marginLeft: 10, color: Colors.Yellow }}>{item.score}</Text>
+                            <View style={{ backgroundColor: Colors.Yellow, height: 4, borderRadius: 30, marginLeft: 5, marginRight: 5, flex: item.score / 12, alignSelf: "center" }} />
+                            <View style={{ flex: 1 }}>
+                                <Text style={{ marginLeft: 10, color: Colors.Yellow, alignSelf: "flex-end" }}>{item.score}</Text>
+                            </View>
+                            {/* <Text style={{ marginLeft: 10, color: Colors.Yellow }}>{item.score}</Text> */}
                         </View>
                     )} />
             </View>

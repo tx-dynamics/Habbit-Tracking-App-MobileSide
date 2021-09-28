@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import { startDateStore } from '../../../Redux/Actions/Actions'
 import { useFocusEffect } from '@react-navigation/native';
+import { TextInput } from 'react-native-gesture-handler';
 
 
 const NewHome = (props) => {
@@ -243,7 +244,7 @@ const NewHome = (props) => {
                 // alert("na")
             } else {
 
-                if (onlydateRange[index] === moment(new Date()).format('YYYY-MM-DD')) {
+                if (onlydateRange[index] <= moment(new Date()).format('YYYY-MM-DD')) {
                     // alert("equal")
                     Vibration.vibrate()
                     setLoading(true)
@@ -283,7 +284,7 @@ const NewHome = (props) => {
             <View style={{ flex: .2, justifyContent: "center" }}>
                 <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingHorizontal: wp(5) }}>
                     <View>
-                        <Text style={{ fontSize: 25, fontWeight: "bold" }}>Good Morning</Text>
+                        <Text style={{ fontSize: 25, fontWeight: "bold" }}>Get Energized </Text>
                         <Text style={{ fontSize: 25, fontWeight: "bold" }}>{personName}</Text>
                     </View>
                     <TouchableOpacity onPress={() => props.navigation.navigate('ProfileStack', { screen: 'Profile' })}
@@ -328,18 +329,16 @@ const NewHome = (props) => {
                             keyExtractor={(item, index) => index.toString()}
                             renderItem={({ item, index }) => (
                                 <View style={{ backgroundColor: "#D3D3D3", borderRadius: 12, paddingHorizontal: wp(5), marginTop: wp(3), paddingVertical: wp(5) }}>
-                                    <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                                    <View style={{}}>
                                         <Text style={{ color: "#FFFFFF", fontSize: 17 }}>{item.habbitTitle}</Text>
-                                        <View style={{ width: wp(20) }}>
-                                            <Text style={{ color: "#FFFFFF", fontSize: 13, alignSelf: "flex-end" }}>{item.habbitDescription}</Text>
-                                        </View>
+                                        <Text style={{ color: "#FFFFFF", fontSize: 13 }} numberOfLines={2}>{item.habbitDescription}</Text>
                                     </View>
                                     <ScrollView horizontal style={{}} contentContainerStyle={{ flex: 1, justifyContent: "space-between" }}>
                                         {item.dates.map((itemm, indexx) =>
                                             <View style={{ flexDirection: "row", marginTop: wp(4), justifyContent: "space-between", paddingHorizontal: wp(3) }}>
-                                                <Fonticon type={"MaterialCommunityIcons"} name={itemm.weekDay === "notDone" ? "circle-outline" : "circle"} size={itemm.weekDay === "notDone" ? 18 : 25} color={Colors.Yellow}
-                                                    onPress={() => CompleteHabbit(item._id, indexx, item)} 
-                                                    style={{marginTop:itemm.weekDay === "notDone" ? 0 : -2}}/>
+                                                <Fonticon type={"MaterialCommunityIcons"} name={itemm.weekDay === "notDone" ? "circle-outline" : "circle"} size={itemm.weekDay === "notDone" ? 18 : 27} color={Colors.Yellow}
+                                                    onPress={() => CompleteHabbit(item._id, indexx, item)}
+                                                    style={{ marginTop: itemm.weekDay === "notDone" ? 0 : -5 }} />
                                                 {/* <Text>{onlydateRange[0]}</Text> */}
                                             </View>
                                         )}

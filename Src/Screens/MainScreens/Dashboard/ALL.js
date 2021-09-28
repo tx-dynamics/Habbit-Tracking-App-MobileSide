@@ -23,11 +23,11 @@ const ALL = (props) => {
         React.useCallback(() => {
             getTodayTasks()
         }, [])
-      );
-      
+    );
+
 
     const getTodayTasks = async () => {
-        setLoading(true)
+        // setLoading(true)
         let param = {};
         // alert(JSON.stringify(props.userData))
         param["companyId"] = props.userData.company;
@@ -67,7 +67,9 @@ const ALL = (props) => {
                         <View style={{ marginTop: wp(8), flexDirection: "row" }}>
                             <Text>{item.pod}</Text>
                             <View style={{ backgroundColor: Colors.Yellow, height: 4, borderRadius: 30, marginLeft: 5, marginRight: 5, flex: item.score / 12, alignSelf: "center" }} />
-                            <Text style={{ marginLeft: 10, color: Colors.Yellow }}>{item.score}</Text>
+                            <View style={{ flex: 1 }}>
+                                <Text style={{ marginLeft: 10, color: Colors.Yellow, alignSelf: "flex-end" }}>{item.score}</Text>
+                            </View>
                         </View>
                     )} />
             </View>

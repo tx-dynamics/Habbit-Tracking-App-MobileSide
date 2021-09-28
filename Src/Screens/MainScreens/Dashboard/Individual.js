@@ -21,7 +21,7 @@ const Individual = (props) => {
     );
 
     const getTodayTasks = async () => {
-        setLoading(true)
+        // setLoading(true)
         let param = {};
         param["companyId"] = props.userData.company;
         param["startDate"] = props.ChallengestartDate;

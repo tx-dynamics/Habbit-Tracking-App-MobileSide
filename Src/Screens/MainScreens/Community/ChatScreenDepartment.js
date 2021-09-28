@@ -176,7 +176,8 @@ const ChatScreenDepartment = (props) => {
                     <View style={[styles.boxWithShadow, { flexDirection: "row", paddingLeft: wp(4), height: 48, alignItems: "center", paddingRight: wp(2) }]}>
                         <Pressable style={{ flex: .12, }}
                             onPress={() => openCamera("gallery")}>
-                            <Image source={pictureSelected ? { uri: `data:image/jpeg;base64,${Imagebase64}` } : iconPath.BLACKLOGO} style={styles.imageStyle} />
+                            {/* <Image source={pictureSelected ? { uri: `data:image/jpeg;base64,${Imagebase64}` } : iconPath.BLACKLOGO} style={styles.imageStyle} /> */}
+                            <Fonticon type={"Ionicons"} name={"camera"} size={28} color={Colors.Yellow} style={{ alignSelf: "center" }} />
                         </Pressable>
                         <View style={{ flex: .8, }}>
                             <TextInput placeholder={"Post something"}
