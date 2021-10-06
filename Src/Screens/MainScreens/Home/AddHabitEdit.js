@@ -26,7 +26,7 @@ const AddHabitEdit = (props) => {
 
     const setValue = () => {
         let habitData = props.route.params.addHabitData
-        // alert(JSON.stringify(habitData.habbitDescription))
+        // alert(JSON.stringify(habitData._id))
         setHabitName(habitData.habbitTitle)
         setTarget(habitData.habbitDescription)
     }
@@ -50,23 +50,20 @@ const AddHabitEdit = (props) => {
             param["startDate"] = props.ChallengestartDate;
             param["expiryDate"] = props.ChallengeEndDate;
             // alert(JSON.stringify(props.userId))
-            await Axios("specialHabbit/edit/"+props.userId, param, 'PUT').then(async (response) => {
+            await Axios("specialHabbit/edit/"+props.route.params.addHabitData._id, param, 'PUT').then(async (response) => {
                 // alert(JSON.stringify(response))
-                // // if (response.error === undefined) {
-                // //     setPOD(response.habbits)
-                // //     setChallangeTitle(response.challangeTitle)
-                // // } else {
-                // //     alert(JSON.stringify(response.error))
-                // // }
-                // setalertText("Habit added successfully")
-                // setShowAlert(true)
-                // // alert("Habit added successfully")
-                // setHabitName("")
-                // setTarget("")
+
+                props.navigation.goBack()
+
+                // if (response._id !== undefined) {
+                //     setPOD(response.habbits)
+                //     setChallangeTitle(response.challangeTitle)
+                // }
+               
                 setLoading(false)
             })
                 .catch((err) => {
-                    // alert(JSON.stringify(err))
+                    alert(JSON.stringify(err))
                     console.warn(err)
                     setLoading(false)
                 })
@@ -85,7 +82,8 @@ const AddHabitEdit = (props) => {
                 <Text style={{ fontSize: 15, color: Colors.Yellow, fontWeight: "bold", marginBottom: -3, marginTop: wp(5) }}>Set Target</Text>
                 <InputField placeholder={"set your target"}
                     value={target}
-                    onChangeText={(target) => setTarget(target)} />
+                    onChangeText={(target) => setTarget(target)} 
+                    maxLength = {84}/>
             </View>
             <Loader loading={loading} />
             <NewAlert show={showAlert}

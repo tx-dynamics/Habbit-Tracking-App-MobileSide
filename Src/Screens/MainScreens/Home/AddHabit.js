@@ -72,7 +72,8 @@ const AddHabit = (props) => {
                 <Text style={{ fontSize: 15, color: Colors.Yellow, fontWeight: "bold", marginBottom: -3, marginTop: wp(5) }}>Set Target</Text>
                 <InputField placeholder={"set your target"}
                     value={target}
-                    onChangeText={(target) => setTarget(target)} />
+                    onChangeText={(target) => setTarget(target)} 
+                    maxLength = {84}/>
             </View>
             <Loader loading={loading} />
             <NewAlert show={showAlert}

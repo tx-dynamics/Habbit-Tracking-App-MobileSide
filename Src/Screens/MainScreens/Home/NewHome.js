@@ -333,8 +333,8 @@ const NewHome = (props) => {
                                     style={{ backgroundColor: "#D3D3D3", borderRadius: 12, paddingHorizontal: wp(5), marginTop: wp(3), paddingVertical: wp(5) }}>
                                     <View style={{}}>
                                         <Text style={{ color: "#FFFFFF", fontSize: 17 }}>{item.habbitTitle}</Text>
-                                        <Text style={{ color: "#FFFFFF", fontSize: 13 }} numberOfLines={2}>{" uhuhuh jhjhjh jkjj ijjij ihihh hhhjhhj jhhjhhj hjhjhjh jhjjhjh ihihihihuu gughhg ugughuhhu sdsds sajhhcdsa adhiahids aduhaihdiha adihahjsdha aishdiasidh "}</Text>
-                                        {/* <Text style={{ color: "#FFFFFF", fontSize: 13 }} numberOfLines={2}>{item.habbitDescription}</Text> */}
+                                        {/* <Text style={{ color: "#FFFFFF", fontSize: 13 }} numberOfLines={2}>{" uhuhuh jhjhjh jkjj ijjij ihihh hhhjhhj jhhjhhj hjhjhjh jhjjhjh ihihihihuu gughhg ugughuhhu sdsds sajhhcdsa adhiahids aduhaihdiha adihahjsdha aishdiasidh "}</Text> */}
+                                        <Text style={{ color: "#FFFFFF", fontSize: 13 }} numberOfLines={2}>{item.habbitDescription}</Text>
                                     </View>
                                     <ScrollView horizontal style={{}} contentContainerStyle={{ flex: 1, justifyContent: "space-between" }}>
                                         {item.dates.map((itemm, indexx) =>
