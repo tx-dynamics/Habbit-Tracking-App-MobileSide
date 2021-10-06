@@ -25,6 +25,7 @@ const Individual = (props) => {
         let param = {};
         param["companyId"] = props.userData.company;
         param["startDate"] = props.ChallengestartDate;
+        param["expiryDate "] = props.ChallengeEndDate;
         await Axios("dashboard/individual", param, 'POST').then(async (response) => {
             if (response.error === undefined) {
                 setIndividual(response)

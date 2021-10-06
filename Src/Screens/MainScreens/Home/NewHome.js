@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import {
     View, Text, StyleSheet, Image, FlatList, TouchableOpacity, ScrollView,
-    Vibration
+    Vibration,
+    Pressable
 } from 'react-native'
 
 import { iconPath } from '../../../Constants/icon';
@@ -97,8 +98,6 @@ const NewHome = (props) => {
             setLoading(true)
             getTodayTasks(prevDate)
         }
-
-
     }
     const ScrollDateRight = () => {
         var nextDate = moment(weekEnd).add(1, "days").format("YYYY-MM-DD");
@@ -156,7 +155,7 @@ const NewHome = (props) => {
         param["userId"] = props.userId;
         await Axios("challange/previousChallange", param, 'POST').then(async (response) => {
             // alert(JSON.stringify(response))
-            // console.log("ndvmdmmdn" + JSON.stringify(response))
+            // console.log("ndvmdmmdn" + JSON.stringify(response.habbits[0]))
             if (response.prevData) {
                 // alert("idfff")
                 getDateDetails(response)
@@ -234,16 +233,19 @@ const NewHome = (props) => {
         }
         return res;
     }
+    const EditPost = async (habbitId, item) => {
+        // alert(JSON.stringify(item))
+        if (item.special === undefined) {
+        } else {
+            props.navigation.navigate("AddHabitEdit", { addHabitData: item })
+        }
+        // alert(JSON.stringify(item.special))
+    }
     const CompleteHabbit = async (habbitId, index, item) => {
-        //    alert(habbitId)
-        //    await setHid(habbitId)
         if (challengeStartDatee > onlydateRange[index]) {
-            // alert("if"+challengeStartDatee)
         } else {
             if (challengeEndDatee < onlydateRange[index]) {
-                // alert("na")
             } else {
-
                 if (onlydateRange[index] <= moment(new Date()).format('YYYY-MM-DD')) {
                     // alert("equal")
                     Vibration.vibrate()
@@ -275,7 +277,6 @@ const NewHome = (props) => {
                     // alert("not Equal")
                 }
             }
-
         }
     }
 
@@ -328,10 +329,12 @@ const NewHome = (props) => {
                             showsVerticalScrollIndicator={false}
                             keyExtractor={(item, index) => index.toString()}
                             renderItem={({ item, index }) => (
-                                <View style={{ backgroundColor: "#D3D3D3", borderRadius: 12, paddingHorizontal: wp(5), marginTop: wp(3), paddingVertical: wp(5) }}>
+                                <Pressable onLongPress={() => EditPost(item._id, item)}
+                                    style={{ backgroundColor: "#D3D3D3", borderRadius: 12, paddingHorizontal: wp(5), marginTop: wp(3), paddingVertical: wp(5) }}>
                                     <View style={{}}>
                                         <Text style={{ color: "#FFFFFF", fontSize: 17 }}>{item.habbitTitle}</Text>
-                                        <Text style={{ color: "#FFFFFF", fontSize: 13 }} numberOfLines={2}>{item.habbitDescription}</Text>
+                                        <Text style={{ color: "#FFFFFF", fontSize: 13 }} numberOfLines={2}>{" uhuhuh jhjhjh jkjj ijjij ihihh hhhjhhj jhhjhhj hjhjhjh jhjjhjh ihihihihuu gughhg ugughuhhu sdsds sajhhcdsa adhiahids aduhaihdiha adihahjsdha aishdiasidh "}</Text>
+                                        {/* <Text style={{ color: "#FFFFFF", fontSize: 13 }} numberOfLines={2}>{item.habbitDescription}</Text> */}
                                     </View>
                                     <ScrollView horizontal style={{}} contentContainerStyle={{ flex: 1, justifyContent: "space-between" }}>
                                         {item.dates.map((itemm, indexx) =>
@@ -343,7 +346,7 @@ const NewHome = (props) => {
                                             </View>
                                         )}
                                     </ScrollView>
-                                </View>
+                                </Pressable>
                             )} />
                     </View>
 

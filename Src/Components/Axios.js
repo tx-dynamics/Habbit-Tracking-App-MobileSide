@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-import { BaseUrl, } from '../Constants/BaseUrl'
+import { BaseUrl } from '../Constants/BaseUrl'
 
 const Axios = async (url, params, method) => {
     return new Promise((resolve, reject) => {

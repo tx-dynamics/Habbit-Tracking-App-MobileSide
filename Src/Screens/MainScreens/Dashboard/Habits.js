@@ -45,6 +45,7 @@ const Habits = ({ navigation, ...props }) => {
         let param = {};
         param["companyId"] = props.userData.company;
         param["startDate"] = props.ChallengestartDate;
+        param["expiryDate "] = props.ChallengeEndDate;
         await Axios("dashboard/habits", param, 'POST').then(async (response) => {
             // alert("sdsdsdsds" + JSON.stringify(response.challange.habbits.length))
             if (response.error === undefined) {

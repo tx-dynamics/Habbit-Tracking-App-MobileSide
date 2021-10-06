@@ -28,6 +28,7 @@ const POD = (props) => {
         param["companyId"] = props.userData.company;
         param["departmentId"] = props.userData.department;
         param["startDate"] = props.ChallengestartDate;
+        param["expiryDate "] = props.ChallengeEndDate;
         await Axios("dashboard/department", param, 'POST').then(async (response) => {
             // alert(JSON.stringify(response))
             if (response.error === undefined) {

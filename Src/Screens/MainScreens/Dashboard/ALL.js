@@ -32,6 +32,7 @@ const ALL = (props) => {
         // alert(JSON.stringify(props.userData))
         param["companyId"] = props.userData.company;
         param["startDate"] = props.ChallengestartDate;
+        param["expiryDate "] = props.ChallengeEndDate;
         await Axios("dashboard/companyDepartments", param, 'POST').then(async (response) => {
             // alert(JSON.stringify(response))
             if (response.error === undefined) {
@@ -83,6 +84,7 @@ const mapStateToProps = (state) => {
         userId: state.AuthReducer.userId,
         userData: state.AuthReducer.userData,
         ChallengestartDate: state.HomeReducer.ChallengestartDate,
+        ChallengeEndDate: state.HomeReducer.ChallengeEndDate,
     }
 }
 const mapDispatchToProps = (dispatch) => {

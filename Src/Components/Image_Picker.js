@@ -8,13 +8,13 @@ export default Image_Picker = type => {
     if (type.toLowerCase() === "gallery") {
       //start of gallery
       ImagePicker.openPicker({
-        width: 250,
-        height: 250,
+        // width: 250,
+        // height: 250,
         cropping: true,
         mediaType: "photo",
-        compressImageQuality: 0.1,
-        compressImageMaxWidth: 250,
-        compressImageMaxHeight: 250,
+        compressImageQuality: 8,
+        // compressImageMaxWidth: 250,
+        // compressImageMaxHeight: 250,
         includeBase64: true,
         freeStyleCropEnabled: true,
         cropperCircleOverlay: true
@@ -40,12 +40,12 @@ export default Image_Picker = type => {
       };
 
       ImagePicker.openCamera({
-        width: 250,
-        height: 250,
+        // width: 250,
+        // height: 250,
         cropping: true,
-        compressImageQuality: 0.1,
-        compressImageMaxWidth: 250,
-        compressImageMaxHeight: 250,
+        compressImageQuality: 8,
+        // compressImageMaxWidth: 250,
+        // compressImageMaxHeight: 250,
         useFrontCamera: true,
         includeBase64: true,
         freeStyleCropEnabled: true,
