@@ -35,6 +35,7 @@ const NewHome = (props) => {
     const [dateIndex, setDateIndex] = useState('')
     const [wholeDateArray, setWholeDateArray] = useState([])
     const [ChallangeAvailable, setChallangeAvailable] = useState(true)
+    const [isPreviousData, setIsPreviousData] = useState(false)
 
     const [Imagebase64, setImagebase64] = useState("")
     const [pictureSelected, setpictureSelected] = useState(false)
@@ -90,14 +91,12 @@ const NewHome = (props) => {
         // await setDateRange(dateArrr)
     }
     const ScrollDateLeft = () => {
-        var prevDate = moment(weekStart).subtract(1, "days").format("YYYY-MM-DD");
-        // alert(prevDate)
-        if (challengeStartDatee > prevDate) {
-            // alert(challengeStartDatee + "if" + prevDate)
-        } else {
+        var prevDate = moment(weekStart).subtract(2, "days").format("YYYY-MM-DD");
+        // alert(challengeStartDatee +"  "+prevDate)
+        if (challengeStartDatee < prevDate) {
             setLoading(true)
             getTodayTasks(prevDate)
-        }
+        } 
     }
     const ScrollDateRight = () => {
         var nextDate = moment(weekEnd).add(1, "days").format("YYYY-MM-DD");
@@ -136,8 +135,10 @@ const NewHome = (props) => {
                 data["ChallengeId"] = response._id;
                 // alert(JSON.stringify(data))
                 props.storeStartDate(data)
+                setIsPreviousData(false)
             } else {
                 getPreviousTasks(moment(new Date()).format('YYYY-MM-DD'))
+                setIsPreviousData(true)
             }
             setLoading(false)
         })
@@ -171,6 +172,8 @@ const NewHome = (props) => {
                 data["ChallengestartDate"] = response.startDate.split('T')[0];
                 data["ChallengeEndDate"] = response.expiryDate.split('T')[0];
                 data["ChallengeId"] = response._id;
+               await setIsPreviousData(true)
+
                 // alert(JSON.stringify(data))
                 props.storeStartDate(data)
             } else {
@@ -247,31 +250,33 @@ const NewHome = (props) => {
             if (challengeEndDatee < onlydateRange[index]) {
             } else {
                 if (onlydateRange[index] <= moment(new Date()).format('YYYY-MM-DD')) {
-                    // alert("equal")
-                    Vibration.vibrate()
-                    setLoading(true)
-                    let param = {};
-                    param["user"] = props.userId;
-                    param["habbit"] = habbitId;
-                    param["department"] = props.userData.department;
-                    param["company"] = props.userData.company;
-                    if (item.special === undefined) {
-                        param["special"] = "false";
-                    } else {
-                        param["special"] = "true";
-                    }
-                    // alert(JSON.stringify(param))
-                    await Axios("challange/completeHabbit", param, 'POST').then(async (response) => {
-                        setLoading(false)
-                    })
-                        .catch(async (err) => {
-                            if (err.toString().includes("Done")) {
-                                await getTodayTasks(moment(new Date()).format('YYYY-MM-DD'))
-                            } else {
-                                console.warn(err)
-                            }
+                    // alert(isPreviousData)
+
+                    if (isPreviousData === false) {
+                        Vibration.vibrate()
+                        let param = {};
+                        param["user"] = props.userId;
+                        param["habbit"] = habbitId;
+                        param["date"] = onlydateRange[index];
+                        param["department"] = props.userData.department;
+                        param["company"] = props.userData.company;
+                        if (item.special === undefined) {
+                            param["special"] = "false";
+                        } else {
+                            param["special"] = "true";
+                        }
+                        await Axios("challange/completeHabbit", param, 'POST').then(async (response) => {
                             setLoading(false)
                         })
+                            .catch(async (err) => {
+                                if (err.toString().includes("Done")) {
+                                    await getTodayTasks(moment(new Date()).format('YYYY-MM-DD'))
+                                } else {
+                                    console.warn(err)
+                                }
+                                setLoading(false)
+                            })
+                    }
 
                 } else {
                     // alert("not Equal")
@@ -296,7 +301,10 @@ const NewHome = (props) => {
                 </View>
 
                 {upcomingChallangeAvailable ?
-                    <Text style={{ alignSelf: "center", color: Colors.Yellow }}>{"New Challange will be start on " + upcomingChallangeDate}</Text>
+                upcomingChallangeDate ? 
+                    <Text style={{ alignSelf: "center", color: Colors.Yellow }}>{"New Challenge will be start on " + upcomingChallangeDate}</Text>
+                    :
+                    <Text style={{ alignSelf: "center", color: Colors.Yellow }}>{"No Upcoming Challenge found"}</Text>
                     : null}
             </View>
 
@@ -339,7 +347,7 @@ const NewHome = (props) => {
                                     <ScrollView horizontal style={{}} contentContainerStyle={{ flex: 1, justifyContent: "space-between" }}>
                                         {item.dates.map((itemm, indexx) =>
                                             <View style={{ flexDirection: "row", marginTop: wp(4), justifyContent: "space-between", paddingHorizontal: wp(3) }}>
-                                                <Fonticon type={"MaterialCommunityIcons"} name={itemm.weekDay === "notDone" ? "circle-outline" : "circle"} size={itemm.weekDay === "notDone" ? 18 : 27} color={Colors.Yellow}
+                                                <Fonticon type={"MaterialCommunityIcons"} name={itemm.weekDay === "notDone" ? "circle-outline" : "circle"} size={itemm.weekDay === "notDone" ? 18 : 24} color={Colors.Yellow}
                                                     onPress={() => CompleteHabbit(item._id, indexx, item)}
                                                     style={{ marginTop: itemm.weekDay === "notDone" ? 0 : -5 }} />
                                                 {/* <Text>{onlydateRange[0]}</Text> */}

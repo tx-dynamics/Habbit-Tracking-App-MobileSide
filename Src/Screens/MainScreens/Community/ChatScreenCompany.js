@@ -17,6 +17,7 @@ import Fonticon from '../../../Constants/FontIcon';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import Image_Picker from '../../../Components/Image_Picker';
 import Loader from '../../../Components/Loader';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const ENDPOINT = "https://mindful-leader-athlete.herokuapp.com";
 var socket;
@@ -212,15 +213,15 @@ const ChatScreenCompany = (props) => {
                 // visible={true}
                 visible={ImageModelShow}
                 onRequestClose={() => { setImageModelShow(false) }}>
-                <View style={{ flex: 1, backgroundColor: "white" }}>
+                <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
                     <Image source={{ uri: `data:image/jpeg;base64,${base64ImageFull}` }} style={{ width: "100%", height: "100%", resizeMode: "contain" }} />
                     <Pressable onPress={() => setImageModelShow(false)}
-                        style={{ position: "absolute", top: 10, right: 10 }}>
+                        style={{ position: "absolute", top: Platform.OS === 'ios'? 40 : 10, right: 10 }}>
                         <Fonticon type={"Entypo"} name={"circle-with-cross"} size={wp(8)} color={Colors.Yellow}
                             style={{ flex: .12 }}
                         />
                     </Pressable>
-                </View>
+                </SafeAreaView>
             </Modal>
             <Loader loading={loading} />
 

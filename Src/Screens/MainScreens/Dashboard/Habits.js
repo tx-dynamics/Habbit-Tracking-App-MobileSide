@@ -47,9 +47,8 @@ const Habits = ({ navigation, ...props }) => {
         param["startDate"] = props.ChallengestartDate;
         param["expiryDate "] = props.ChallengeEndDate;
         await Axios("dashboard/habits", param, 'POST').then(async (response) => {
-            // alert("sdsdsdsds" + JSON.stringify(response.challange.habbits.length))
+            // console.log( JSON.stringify(props.ChallengeEndDate))
             if (response.error === undefined) {
-
                 var perChunk = 3
                 var result = {}
                 result = response.usersArray.reduce((resultArray, item, index) => {
@@ -115,6 +114,7 @@ const mapStateToProps = (state) => {
         userId: state.AuthReducer.userId,
         userData: state.AuthReducer.userData,
         ChallengestartDate: state.HomeReducer.ChallengestartDate,
+        ChallengeEndDate: state.HomeReducer.ChallengeEndDate,
 
     }
 }
