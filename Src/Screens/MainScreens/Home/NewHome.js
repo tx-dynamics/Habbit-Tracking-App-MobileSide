@@ -36,6 +36,7 @@ const NewHome = (props) => {
     const [wholeDateArray, setWholeDateArray] = useState([])
     const [ChallangeAvailable, setChallangeAvailable] = useState(true)
     const [isPreviousData, setIsPreviousData] = useState(false)
+    const [isPreviousApiCall, setIsPreviousApiCall] = useState(false)
 
     const [Imagebase64, setImagebase64] = useState("")
     const [pictureSelected, setpictureSelected] = useState(false)
@@ -52,10 +53,8 @@ const NewHome = (props) => {
     useFocusEffect(
         React.useCallback(() => {
             getTodayTasks(moment(new Date()).format('YYYY-MM-DD'))
-            // getTodayTasks(moment(new Date()).format('2021-08-22'))
         }, [])
-    );
-
+    )
     const setValues = () => {
         if (props.userData.profileImage === undefined) {
         }
@@ -96,7 +95,7 @@ const NewHome = (props) => {
         if (challengeStartDatee < prevDate) {
             setLoading(true)
             getTodayTasks(prevDate)
-        } 
+        }
     }
     const ScrollDateRight = () => {
         var nextDate = moment(weekEnd).add(1, "days").format("YYYY-MM-DD");
@@ -167,12 +166,13 @@ const NewHome = (props) => {
                 setUpcomingChallangeAvailable(true)
                 setChallengeEndDatee(response.expiryDate.split('T')[0])
                 setChallengeStartDatee(response.startDate.split('T')[0])
+                setIsPreviousApiCall(true)
                 // alert(JSON.stringify(response._id))
                 let data = {}
                 data["ChallengestartDate"] = response.startDate.split('T')[0];
                 data["ChallengeEndDate"] = response.expiryDate.split('T')[0];
                 data["ChallengeId"] = response._id;
-               await setIsPreviousData(true)
+                await setIsPreviousData(true)
 
                 // alert(JSON.stringify(data))
                 props.storeStartDate(data)
@@ -251,31 +251,32 @@ const NewHome = (props) => {
             } else {
                 if (onlydateRange[index] <= moment(new Date()).format('YYYY-MM-DD')) {
                     // alert(isPreviousData)
-
                     if (isPreviousData === false) {
-                        Vibration.vibrate()
-                        let param = {};
-                        param["user"] = props.userId;
-                        param["habbit"] = habbitId;
-                        param["date"] = onlydateRange[index];
-                        param["department"] = props.userData.department;
-                        param["company"] = props.userData.company;
-                        if (item.special === undefined) {
-                            param["special"] = "false";
-                        } else {
-                            param["special"] = "true";
-                        }
-                        await Axios("challange/completeHabbit", param, 'POST').then(async (response) => {
-                            setLoading(false)
-                        })
-                            .catch(async (err) => {
-                                if (err.toString().includes("Done")) {
-                                    await getTodayTasks(moment(new Date()).format('YYYY-MM-DD'))
-                                } else {
-                                    console.warn(err)
-                                }
+                        if (isPreviousApiCall === false) {
+                            Vibration.vibrate()
+                            let param = {};
+                            param["user"] = props.userId;
+                            param["habbit"] = habbitId;
+                            param["date"] = onlydateRange[index];
+                            param["department"] = props.userData.department;
+                            param["company"] = props.userData.company;
+                            if (item.special === undefined) {
+                                param["special"] = "false";
+                            } else {
+                                param["special"] = "true";
+                            }
+                            await Axios("challange/completeHabbit", param, 'POST').then(async (response) => {
                                 setLoading(false)
                             })
+                                .catch(async (err) => {
+                                    if (err.toString().includes("Done")) {
+                                        await getTodayTasks(moment(new Date()).format('YYYY-MM-DD'))
+                                    } else {
+                                        console.warn(err)
+                                    }
+                                    setLoading(false)
+                                })
+                        }
                     }
 
                 } else {
@@ -301,10 +302,10 @@ const NewHome = (props) => {
                 </View>
 
                 {upcomingChallangeAvailable ?
-                upcomingChallangeDate ? 
-                    <Text style={{ alignSelf: "center", color: Colors.Yellow }}>{"New Challenge will be start on " + upcomingChallangeDate}</Text>
-                    :
-                    <Text style={{ alignSelf: "center", color: Colors.Yellow }}>{"No Upcoming Challenge found"}</Text>
+                    upcomingChallangeDate ?
+                        <Text style={{ alignSelf: "center", color: Colors.Yellow }}>{"New Challenge will be start on " + upcomingChallangeDate}</Text>
+                        :
+                        <Text style={{ alignSelf: "center", color: Colors.Yellow }}>{"No Upcoming Challenge found"}</Text>
                     : null}
             </View>
 
