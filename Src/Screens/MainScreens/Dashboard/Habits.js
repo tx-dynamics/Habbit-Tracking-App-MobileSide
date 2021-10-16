@@ -38,8 +38,7 @@ const Habits = ({ navigation, ...props }) => {
         React.useCallback(() => {
             getTodayTasks()
         }, [])
-    );
-
+    )
     const getTodayTasks = async () => {
         // setLoading(true) 
         let param = {};
@@ -73,7 +72,6 @@ const Habits = ({ navigation, ...props }) => {
                 setLoading(false)
             })
     }
-
     return (
         <View style={styles.container}>
             <View style={{ marginHorizontal: wp(5) }}>
